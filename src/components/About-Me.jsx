@@ -1,6 +1,6 @@
 const AboutMe = () => {
   return (
-    <div className="w-full flex flex-col gap-10 justify-center bg-contents px-28 py-16 min-h-screen">
+    <section className="w-full flex flex-col gap-10 justify-center bg-contents px-28 py-16 min-h-screen">
       <div className="text-white">
         <div className="flex items-end gap-2">
           <img
@@ -36,7 +36,7 @@ const AboutMe = () => {
           View My Resume
         </button>
       </div>
-    </div>
+    </section>
   );
 };
 
