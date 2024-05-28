@@ -28,7 +28,7 @@ const Featured = () => {
     },
   ];
   return (
-    <section className="w-full flex flex-col gap-10  bg-contents px-28 py-16 min-h-screen">
+    <section className="normal-page">
       <h2 className="text-3xl font-bold uppercase">Featured</h2>
       <div className="grid grid-cols-3 gap-10">
         {featuredData.map((data, index) => (

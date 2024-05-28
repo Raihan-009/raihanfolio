@@ -1,6 +1,6 @@
 const AboutMe = () => {
   return (
-    <section className="w-full flex flex-col gap-10  bg-contents px-28 py-16 min-h-screen">
+    <section className="normal-page">
       <div className="text-white">
         <div className="flex items-end gap-2">
           <img
