@@ -14,6 +14,7 @@ export default {
       backgroundColor: {
         contents: "#191919",
         button: "#3959c1",
+        card: "#232323",
       },
       borderColor: {
         borderline: "#8E8E8E",
