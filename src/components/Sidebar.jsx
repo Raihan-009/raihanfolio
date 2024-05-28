@@ -18,7 +18,7 @@ const Sidebar = () => {
     "Blog",
   ];
   return (
-    <section className="w-fit h-[100vh] min-w-60 bg-[#232323] fixed">
+    <section className="w-fit h-[100vh] min-w-60 bg-[#232323] fixed overflow-scroll">
       <div className="flex flex-col h-full py-7 px-9 justify-between font-inter text-white">
         <div className="flex flex-col gap-11">
           <div className="flex flex-col gap-2.5">
@@ -29,7 +29,7 @@ const Sidebar = () => {
             />
             <h1 className="text-2xl font-bold">Raihan Islam</h1>
           </div>
-          <div className="flex flex-col gap-2 overflow-scroll">
+          <div className="flex flex-col gap-2 ">
             {features?.map((feature) => {
               return (
                 <span
@@ -44,7 +44,7 @@ const Sidebar = () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 mt-10">
           <div className="flex gap-4">
             <GithubIcon />
             <LinkedinIcon />
