@@ -29,11 +29,16 @@ const Featured = () => {
   ];
   return (
     <section className="normal-page">
-      <h2 className="text-3xl font-bold uppercase">Featured</h2>
-      <div className="grid grid-cols-3 gap-10">
-        {featuredData.map((data, index) => (
-          <FeatureCard key={index} feature={data} />
-        ))}
+      <div className="flex flex-col gap-14">
+        <h2 className="text-3xl font-bold uppercase">Featured</h2>
+        <div className="grid grid-cols-3 gap-10">
+          {featuredData.map((data, index) => (
+            <FeatureCard
+              key={index}
+              feature={data}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
