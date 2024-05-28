@@ -1,7 +1,7 @@
 import Sidebar from "./Sidebar";
 const Layout = ({ children }) => {
   return (
-    <div className="flex justify-center bg-slate-700">
+    <div className="flex justify-center bg-slate-700 font-inter">
       <main
         className="w-full flex"
         style={{
