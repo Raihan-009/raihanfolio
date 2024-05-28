@@ -18,7 +18,7 @@ const Sidebar = () => {
     "Blog",
   ];
   return (
-    <section className="w-fit h-[100vh] min-w-60 bg-[#232323] fixed overflow-scroll">
+    <section className="w-fit h-[100vh] min-w-60 bg-[#232323] overflow-scroll">
       <div className="flex flex-col h-full py-7 px-9 justify-between font-inter text-white">
         <div className="flex flex-col gap-11">
           <div className="flex flex-col gap-2.5">

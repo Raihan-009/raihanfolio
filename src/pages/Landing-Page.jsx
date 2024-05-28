@@ -1,10 +1,10 @@
-import Sidebar from "../components/Sidebar";
+import Layout from "../components/Layout";
 
 const LandingPageSection = () => {
   return (
-    <>
-      <Sidebar/>
-    </>
+    <Layout>
+      <p className="text-black text-2xl">Hello</p>
+    </Layout>
   );
 };
 
