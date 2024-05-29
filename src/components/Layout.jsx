@@ -1,15 +1,15 @@
 import Sidebar from "./Sidebar";
 const Layout = ({ children }) => {
   return (
-    <div className="flex justify-center bg-slate-700 font-inter">
+    <div className="flex justify-center bg-contents font-inter">
       <main
         className="w-full flex"
-        style={{
-          maxWidth: "1440px",
-        }}
+        // style={{
+        //   maxWidth: "1440px",
+        // }}
       >
         <Sidebar />
-        <section>{children ? children : <p>Nothing Added</p>}</section>
+        <section className="">{children ? children : <p>Nothing Added</p>}</section>
       </main>
     </div>
   );
