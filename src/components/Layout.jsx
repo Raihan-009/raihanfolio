@@ -9,7 +9,7 @@ const Layout = ({ children }) => {
         // }}
       >
         <Sidebar />
-        <section className="">{children ? children : <p>Nothing Added</p>}</section>
+        <section className="px-20">{children ? children : <p>Nothing Added</p>}</section>
       </main>
     </div>
   );
