@@ -1,6 +1,5 @@
 import ProjectCard from "./Cards/Project-Card";
 
-
 const AllProjectsSection = () => {
   const projectsData = [
     {
@@ -37,14 +36,15 @@ const AllProjectsSection = () => {
     },
   ];
   return (
-    <section className="normal-page">
-      <div className="flex flex-col gap-14">
-        <h2 className="text-3xl font-bold uppercase">Projects</h2>
-        <div className="grid grid-cols-3 gap-10">
-          {projectsData.map((data, index) => (
-            <ProjectCard key={index} project={data}/>
-          ))}
-        </div>
+    <section className="normal-page flex flex-col gap-14">
+      <h2 className="text-3xl font-bold uppercase">Projects</h2>
+      <div className="grid grid-cols-3 gap-10">
+        {projectsData.map((data, index) => (
+          <ProjectCard
+            key={index}
+            project={data}
+          />
+        ))}
       </div>
     </section>
   );
