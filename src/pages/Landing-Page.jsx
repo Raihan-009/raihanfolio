@@ -4,6 +4,7 @@ import FeaturedSection from "../components/Featured-Section";
 import AllProjectsSection from "../components/All-Projects-Section";
 import SkillsSection from "../components/Skills-Section";
 import AwardSection from "../components/Award-Section";
+import BlogSection from "../components/Blog-Section";
 
 const LandingPageSection = () => {
   return (
@@ -13,6 +14,7 @@ const LandingPageSection = () => {
       <AllProjectsSection />
       <SkillsSection/>
       <AwardSection />
+      <BlogSection />
       {/* <hr className="w-full border-0.2 border-borderline" /> */}
     </Layout>
   );
