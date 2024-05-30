@@ -5,6 +5,7 @@ import AllProjectsSection from "../components/All-Projects-Section";
 import SkillsSection from "../components/Skills-Section";
 import AwardSection from "../components/Award-Section";
 import BlogSection from "../components/Blog-Section";
+import ContactMeSection from "../components/Contact-Me-Section";
 
 const LandingPageSection = () => {
   return (
@@ -15,6 +16,7 @@ const LandingPageSection = () => {
       <SkillsSection/>
       <AwardSection />
       <BlogSection />
+      <ContactMeSection />
       {/* <hr className="w-full border-0.2 border-borderline" /> */}
     </Layout>
   );
