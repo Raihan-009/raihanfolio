@@ -15,7 +15,7 @@ const BlogCard = ({ blog }) => {
          <h5 className="text-xl font-bold">{title}</h5>
           <RedirectIcon className="fill-white" />
          </div>
-          <p className="text-[#d8d8d8]">{date}</p>
+          <p className="text-[#d8d8d8] italic">{date}</p>
           <p>{description}</p>
         </div>
       </div>
