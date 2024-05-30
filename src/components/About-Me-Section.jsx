@@ -1,4 +1,4 @@
-const AboutMe = () => {
+const AboutMeSection = () => {
   return (
     <section className="normal-page">
       <div className="flex flex-col gap-16">
@@ -42,4 +42,4 @@ const AboutMe = () => {
   );
 };
 
-export default AboutMe;
+export default AboutMeSection;

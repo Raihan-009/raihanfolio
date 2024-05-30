@@ -1,7 +1,7 @@
 import ProjectCard from "./Cards/Project-Card";
 
 
-const AllProjects = () => {
+const AllProjectsSection = () => {
   const projectsData = [
     {
       image: "https://i.ibb.co/98ccsWB/flower-729512.jpg",
@@ -50,4 +50,4 @@ const AllProjects = () => {
   );
 };
 
-export default AllProjects;
+export default AllProjectsSection;

@@ -1,6 +1,6 @@
 import SkillBox from "./Box/Skill-Box";
 
-const Skills = () => {
+const SkillsSection = () => {
   const skillsData = {
     frontend: [
       "JavaScript",
@@ -60,4 +60,4 @@ const Skills = () => {
   );
 };
 
-export default Skills;
+export default SkillsSection;

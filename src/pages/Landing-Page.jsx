@@ -1,16 +1,16 @@
 import Layout from "../components/Layout";
-import AboutMe from "../components/About-Me";
-import Featured from "../components/Featured";
-import AllProjects from "../components/All-Projects";
-import Skills from "../components/Skills";
+import AboutMeSection from "../components/About-Me-Section";
+import FeaturedSection from "../components/Featured-Section";
+import AllProjectsSection from "../components/All-Projects-Section";
+import SkillsSection from "../components/Skills-Section";
 
 const LandingPageSection = () => {
   return (
     <Layout>
-      <AboutMe />
-      <Featured />
-      <AllProjects />
-      <Skills/>
+      <AboutMeSection />
+      <FeaturedSection />
+      <AllProjectsSection />
+      <SkillsSection/>
       {/* <hr className="w-full border-0.2 border-borderline" /> */}
     </Layout>
   );

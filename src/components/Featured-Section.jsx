@@ -1,6 +1,6 @@
 import FeatureCard from "./Cards/Feature-Card";
 
-const Featured = () => {
+const FeaturedSection = () => {
   const featuredData = [
     {
       image: "https://i.ibb.co/98ccsWB/flower-729512.jpg",
@@ -44,4 +44,4 @@ const Featured = () => {
   );
 };
 
-export default Featured;
+export default FeaturedSection;
