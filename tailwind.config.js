@@ -11,14 +11,13 @@ export default {
         0.3: "0.3px",
         0.5: "0.5px",
       },
-      backgroundColor: {
+      colors: {
         contents: "#191919",
         button: "#3959c1",
         card: "#232323",
-      },
-      borderColor: {
         borderline: "#8E8E8E",
       },
+
     },
   },
   plugins: [
