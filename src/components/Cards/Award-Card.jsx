@@ -15,7 +15,7 @@ const AwardCard = ({ award }) => {
           <p className="font-semibold">{platform}</p>
           <p className="text-[#d8d8d8]">Issued on {date}</p>
         </div>
-        <button className="flex gap-2 px-6 py-3 border-0.5 rounded-lg border-borderline">
+        <button className="flex gap-2 px-6 py-3 border-0.5 rounded-lg border-borderline text-sm font-bold">
           <span>Show Certificate</span>
           <RedirectIcon className='fill-white'/>
         </button>
