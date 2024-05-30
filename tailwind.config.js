@@ -25,7 +25,7 @@ export default {
     function ({ addComponents }) {
       addComponents({
         ".normal-page": {
-          "@apply w-full bg-contents px-28 py-16 min-h-screen mb-[1px]":
+          "@apply w-full bg-contents px-28 py-16 min-h-screen border-b-2 border-borderline":
             {},
         },
       });

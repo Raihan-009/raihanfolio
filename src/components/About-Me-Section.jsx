@@ -1,7 +1,7 @@
 const AboutMeSection = () => {
   return (
-    <section className="normal-page">
-      <div className="flex flex-col gap-16">
+    <section className="normal-page flex flex-col gap-16">
+      
         <div className="text-white">
           <div className="flex items-end gap-2">
             <img
@@ -37,7 +37,7 @@ const AboutMeSection = () => {
             View My Resume
           </button>
         </div>
-      </div>
+   
     </section>
   );
 };
