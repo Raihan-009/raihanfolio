@@ -1,6 +1,7 @@
 import {
   GithubIcon,
   LinkedinIcon,
+  RedirectIcon,
   TwitterIcon,
   WhatsappIcon,
 } from "../assets/SVG-Icons";
@@ -40,7 +41,10 @@ const Sidebar = () => {
                 </span>
               );
             })}
-            <span>Resume</span>
+            <div className="group flex items-center gap-2.5 font-bold leading-7 my-1 cursor-pointer hover:text-[#FFD700] peer-hover:fill-[#FFD700]">
+              <span className=" ">Resume</span>
+              <RedirectIcon className="fill-white group-hover:fill-[#FFD700]" />
+            </div>
           </div>
         </div>
 
