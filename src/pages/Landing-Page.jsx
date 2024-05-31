@@ -14,12 +14,11 @@ const LandingPageSection = () => {
       <AboutMeSection />
       <FeaturedSection />
       <AllProjectsSection />
-      <SkillsSection/>
+      <SkillsSection />
       <AwardSection />
       <BlogSection />
       <EducationSection />
       <ContactMeSection />
-      {/* <hr className="w-full border-0.2 border-borderline" /> */}
     </Layout>
   );
 };
