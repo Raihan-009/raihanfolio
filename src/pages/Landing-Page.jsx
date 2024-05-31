@@ -7,6 +7,7 @@ import AwardSection from "../components/Award-Section";
 import BlogSection from "../components/Blog-Section";
 import ContactMeSection from "../components/Contact-Me-Section";
 import EducationSection from "../components/Education-Section";
+import ExperienceSection from "../components/Experience-Section";
 
 const LandingPageSection = () => {
   return (
@@ -17,6 +18,7 @@ const LandingPageSection = () => {
       <SkillsSection />
       <AwardSection />
       <BlogSection />
+      <ExperienceSection />
       <EducationSection />
       <ContactMeSection />
     </Layout>
