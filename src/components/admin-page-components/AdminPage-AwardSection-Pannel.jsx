@@ -87,7 +87,7 @@ const AdminPageAwardSectionPannel = () => {
       {/* Adding Awards Data Form */}
       <form
         id="myForm"
-        className="flex my-4 p-4  mx-auto flex-col gap-5 justify-center items-center bg-blue-100 text-black"
+        className="flex my-4 p-4  mx-auto flex-col gap-5 justify-center items-center bg-violet-100 text-black"
         onSubmit={handleAddAwardData}
       >
         <input

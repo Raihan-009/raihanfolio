@@ -86,7 +86,7 @@ const AdminPageAllProjectsPannel = () => {
 
   return (
     <div className="my-4">
-      <h2 className="text-xl text-center">Add Projet</h2>
+      <h2 className="text-xl text-center">Add Project</h2>
       {/* Adding Projects Data Form */}
       <form
         id="myForm"
