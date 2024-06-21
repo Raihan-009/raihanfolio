@@ -73,16 +73,18 @@ const AdminPageFeaturedSectionPannel = () => {
       setUploadedImage(null);
       setPerc(null);
       toast.success('Feature Data Added Successfully');
+      document.getElementById('myForm').reset();
     } catch (error) {
       console.error('Error adding document: ', error);
     }
   };
   return (
     <div className="my-4">
-      <h2>Adding Feature to All Featured Section Data</h2>
+      <h2 className="text-xl text-center">Add Feature</h2>
       {/* Adding Featured Data Form */}
 
       <form
+        id="myForm"
         className="flex my-4 p-4  mx-auto flex-col gap-5 justify-center items-center bg-pink-100 text-black"
         onSubmit={handleAddFeatureData}
       >
@@ -123,7 +125,7 @@ const AdminPageFeaturedSectionPannel = () => {
         />
         <button
           disabled={per !== null && per < 100}
-          className="border-2 bg-green-100 px-4"
+          className={`border-2 bg-green-100 px-4 ${per !== null && per < 100 ? 'opacity-50 cursor-not-allowed' : ''}`}
           type="submit"
         >
           Add

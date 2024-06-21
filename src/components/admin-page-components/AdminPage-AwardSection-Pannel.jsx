@@ -4,27 +4,26 @@ import { db, storage } from '../../config/firebase';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import toast from 'react-hot-toast';
 
-const AdminPageAllProjectsPannel = () => {
-  const [data, setData] = useState({});
+const AdminPageAwardSectionPannel = () => {
+  const [imgUrl, setImgUrl] = useState('');
 
-  const [newProjectTitle, setNewProjectTitle] = useState('');
-  const [newProjectDescription, setNewProjectDescription] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [newAwardTitle, setNewAwardTitle] = useState('');
   const [uploadedImage, setUploadedImage] = useState(null);
+  const [platform, setPlatform] = useState('');
   const [per, setPerc] = useState(null);
+  const [awardGettingDate, setAwardGettingDate] = useState('');
 
-  const allProjectsDataCollectionRef = collection(db, 'AllProjectsData');
+  const allAwardsDataCollectionRef = collection(db, 'AllAwardsData');
 
   useEffect(() => {
     const uploadFile = () => {
       const uploadedImageName = new Date().getTime() + uploadedImage.name;
-      const projectsPhotoFolderRef = ref(
+      const awardsPhotoFolderRef = ref(
         storage,
-        `project-photos/${uploadedImageName}`
+        `awards-photos/${uploadedImageName}`
       );
       const uploadTask = uploadBytesResumable(
-        projectsPhotoFolderRef,
+        awardsPhotoFolderRef,
         uploadedImage
       );
 
@@ -51,7 +50,7 @@ const AdminPageAllProjectsPannel = () => {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setData((prev) => ({ ...prev, img: downloadURL }));
+            setImgUrl(downloadURL);
           });
         }
       );
@@ -59,25 +58,23 @@ const AdminPageAllProjectsPannel = () => {
     uploadedImage && uploadFile();
   }, [uploadedImage]);
 
-  const handleAddProjectData = async (e) => {
+  const handleAddAwardData = async (e) => {
     e.preventDefault();
-    const newFeatureData = {
-      title: newProjectTitle,
-      description: newProjectDescription,
-      img: data.img,
-      startDate: startDate,
-      endDate: endDate,
-      createdAt: serverTimestamp(),
-    };
     try {
-      await addDoc(allProjectsDataCollectionRef, newFeatureData);
-      setNewProjectTitle('');
-      setNewProjectDescription('');
-      setStartDate('');
-      setEndDate('');
+      const newFeatureData = {
+        title: newAwardTitle,
+        img: imgUrl,
+        platform: platform,
+        date: awardGettingDate,
+        createdAt: serverTimestamp(),
+      };
+      await addDoc(allAwardsDataCollectionRef, newFeatureData);
+      setNewAwardTitle('');
+      setPlatform('');
+      setAwardGettingDate('');
       setUploadedImage(null);
       setPerc(null);
-      toast.success('Project Added Successfully');
+      toast.success('Award Added Successfully');
       document.getElementById('myForm').reset();
     } catch (error) {
       console.error('Error adding document: ', error);
@@ -86,47 +83,38 @@ const AdminPageAllProjectsPannel = () => {
 
   return (
     <div className="my-4">
-      <h2 className="text-xl text-center">Add Projet</h2>
-      {/* Adding Projects Data Form */}
+      <h2 className="text-xl text-center">Add Award</h2>
+      {/* Adding Awards Data Form */}
       <form
         id="myForm"
         className="flex my-4 p-4  mx-auto flex-col gap-5 justify-center items-center bg-blue-100 text-black"
-        onSubmit={handleAddProjectData}
+        onSubmit={handleAddAwardData}
       >
         <input
           type="text"
           required
-          value={newProjectTitle}
-          placeholder="Project Title"
+          value={newAwardTitle}
+          placeholder="Award Title"
           onChange={(e) => {
-            setNewProjectTitle(e.target.value);
-          }}
-        />
-        <textarea
-          type="text"
-          required
-          placeholder="Project Description"
-          value={newProjectDescription}
-          onChange={(e) => {
-            setNewProjectDescription(e.target.value);
+            setNewAwardTitle(e.target.value);
           }}
         />
         <input
           type="text"
           required
-          placeholder="Start Date"
-          value={startDate}
+          placeholder="Platform Name"
+          value={platform}
           onChange={(e) => {
-            setStartDate(e.target.value);
+            setPlatform(e.target.value);
           }}
         />
         <input
           type="text"
           required
-          placeholder="End Date"
-          value={endDate}
+          placeholder="Date of Getting Award"
+          value={awardGettingDate}
           onChange={(e) => {
-            setEndDate(e.target.value);
+            setAwardGettingDate(e.target.value);
           }}
         />
         <input
@@ -158,4 +146,4 @@ const AdminPageAllProjectsPannel = () => {
   );
 };
 
-export default AdminPageAllProjectsPannel;
+export default AdminPageAwardSectionPannel;
