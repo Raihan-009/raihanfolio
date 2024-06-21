@@ -1,41 +1,36 @@
-import FeatureCard from "./Cards/Feature-Card";
+import FeatureCard from './Cards/Feature-Card';
+import { useEffect, useState } from 'react';
+
+import { db } from '../config/firebase';
+import { collection, getDocs } from 'firebase/firestore';
+const featuredDataCollectionRef = collection(db, 'featuredData');
 
 const FeaturedSection = () => {
-  const featuredData = [
-    {
-      image: "https://i.ibb.co/98ccsWB/flower-729512.jpg",
-      title: "Software Structure",
-      description:
-        "The term eBPF stands for extended Berkeley Packet Filter, is a time to technology that can run programs in a privileged context or allow developers time for ndow dieejie develop now done oe.",
-    },
-    {
-      image: "https://i.ibb.co/98ccsWB/flower-729512.jpg",
-      title: "GitHub Structure",
-      description:
-        "The term eBPF stands for extended Berkeley Packet Filter, is a time to technology that can run programs in a privileged context or allow developers time for ndow dieejie develop now done oe.",
-    },
-    {
-      image: "https://i.ibb.co/98ccsWB/flower-729512.jpg",
-      title: "Amazon Structure",
-      description:
-        "The term eBPF stands for extended Berkeley Packet Filter, is a time to technology that can run programs in a privileged context or allow developers time for ndow dieejie develop now done oe.",
-    },
-    {
-      image: "https://i.ibb.co/98ccsWB/flower-729512.jpg",
-      title: "Google Structure",
-      description:
-        "DescriThe term eBPF stands for extended Berkeley Packet Filter, is a time to technology that can run programs in a privileged context or allow developers time for ndow dieejie develop now done oe.ption",
-    },
-  ];
+  const [featuredData, setFeaturedData] = useState([]);
+
+  // Fetching all featured data from firebase
+  const getAllFeaturedData = async () => {
+    try {
+      const data = await getDocs(featuredDataCollectionRef);
+      const filterdData = data.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setFeaturedData(filterdData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    getAllFeaturedData();
+  }, [featuredData]);
+
   return (
     <section className="normal-page flex flex-col gap-14">
       <h2 className="text-3xl font-bold uppercase">Featured</h2>
       <div className="w-full flex gap-10">
         {featuredData.map((data, index) => (
-          <FeatureCard
-            key={index}
-            feature={data}
-          />
+          <FeatureCard key={index} feature={data} />
         ))}
       </div>
     </section>
