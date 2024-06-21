@@ -1,4 +1,4 @@
-import Sidebar from "./Sidebar";
+import Sidebar from './Sidebar';
 const Layout = ({ children }) => {
   return (
     <div className="flex justify-center bg-contents font-inter">
@@ -9,7 +9,9 @@ const Layout = ({ children }) => {
         // }}
       >
         <Sidebar />
-        <section className="px-20">{children ? children : <p>Nothing Added</p>}</section>
+        <section className="px-20">
+          {children ? children : <p>Nothing Added</p>}
+        </section>
       </main>
     </div>
   );

@@ -3,7 +3,7 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAwxAQLxqUhOexIrOd43V0HPx_QOf-Dpb8",
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
     authDomain: "raihanfolio-731d6.firebaseapp.com",
     projectId: "raihanfolio-731d6",
     storageBucket: "raihanfolio-731d6.appspot.com",

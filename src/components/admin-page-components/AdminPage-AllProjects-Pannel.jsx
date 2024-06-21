@@ -2,25 +2,26 @@ import { useEffect, useState } from 'react';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db, storage } from '../../config/firebase';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import toast from 'react-hot-toast';
 
-const FeaturedSectionPannel = () => {
+const AdminPageAllProjectsPannel = () => {
   const [data, setData] = useState({});
 
-  const [newFeatureDataTitle, setNewFeatureDataTitle] = useState('');
-  const [newFeatureDataDescription, setNewFeatureDataDescription] =
-    useState('');
+  const [newProjectTitle, setNewProjectTitle] = useState('');
+  const [newProjectDescription, setNewProjectDescription] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [uploadedImage, setUploadedImage] = useState(null);
   const [per, setPerc] = useState(null);
 
-  const featuredDataCollectionRef = collection(db, 'featuredData');
+  const allProjectsDataCollectionRef = collection(db, 'AllProjectsData');
 
   useEffect(() => {
     const uploadFile = () => {
-      const name = new Date().getTime() + uploadedImage.name;
-      console.log(name);
+      const uploadedImageName = new Date().getTime() + uploadedImage.name;
       const featuredPhotoFolderRef = ref(
         storage,
-        `featured-photos/${uploadedImage?.name}`
+        `project-photos/${uploadedImageName}`
       );
       const uploadTask = uploadBytesResumable(
         featuredPhotoFolderRef,
@@ -61,57 +62,78 @@ const FeaturedSectionPannel = () => {
   const handleAddFeatureData = async (e) => {
     e.preventDefault();
     const newFeatureData = {
-      title: newFeatureDataTitle,
-      description: newFeatureDataDescription,
+      title: newProjectTitle,
+      description: newProjectDescription,
       img: data.img,
+      startDate: startDate,
+      endDate: endDate,
       createdAt: serverTimestamp(),
     };
     try {
-      await addDoc(featuredDataCollectionRef, newFeatureData);
-      setNewFeatureDataTitle('');
-      setNewFeatureDataDescription('');
+      await addDoc(allProjectsDataCollectionRef, newFeatureData);
+      setNewProjectTitle('');
+      setNewProjectDescription('');
+      setStartDate('');
+      setEndDate('');
       setUploadedImage(null);
       setPerc(null);
+      toast.success('Project Added Successfully');
     } catch (error) {
       console.error('Error adding document: ', error);
     }
   };
+
   return (
     <div className="my-4">
-      <h2>FeaturedSection Data</h2>
-      {/* Adding Featured Data Form */}
-
+      <h2>Adding Projet to All Projects Section Data</h2>
+      {/* Adding Projects Data Form */}
       <form
-        className="flex my-4 p-4  mx-auto flex-col gap-5 justify-center items-center bg-yellow-50 text-black"
+        className="flex my-4 p-4  mx-auto flex-col gap-5 justify-center items-center bg-blue-100 text-black"
         onSubmit={handleAddFeatureData}
       >
         <input
           type="text"
           required
-          value={newFeatureDataTitle}
-          placeholder="Title"
+          value={newProjectTitle}
+          placeholder="Project Title"
           onChange={(e) => {
-            setNewFeatureDataTitle(e.target.value);
+            setNewProjectTitle(e.target.value);
+          }}
+        />
+        <textarea
+          type="text"
+          required
+          placeholder="Project Description"
+          value={newProjectDescription}
+          onChange={(e) => {
+            setNewProjectDescription(e.target.value);
           }}
         />
         <input
           type="text"
           required
-          placeholder="Description"
-          value={newFeatureDataDescription}
+          placeholder="Start Date"
+          value={startDate}
           onChange={(e) => {
-            setNewFeatureDataDescription(e.target.value);
+            setStartDate(e.target.value);
           }}
         />
-        <div className="">
-          <input
-            type="file"
-            required
-            onChange={(e) => {
-              setUploadedImage(e.target.files[0]);
-            }}
-          />
-        </div>
+        <input
+          type="text"
+          required
+          placeholder="End Date"
+          value={endDate}
+          onChange={(e) => {
+            setEndDate(e.target.value);
+          }}
+        />
+        <input
+          type="file"
+          required
+          onChange={(e) => {
+            setUploadedImage(e.target.files[0]);
+          }}
+        />
         <img
           height={'200px'}
           width={'200px'}
@@ -134,4 +156,4 @@ const FeaturedSectionPannel = () => {
   );
 };
 
-export default FeaturedSectionPannel;
+export default AdminPageAllProjectsPannel;
