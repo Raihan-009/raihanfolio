@@ -1,11 +1,11 @@
 import { RedirectIcon } from '../../assets/SVG-Icons';
 
 const AwardCard = ({ award }) => {
-  const { image, platform, title, date } = award;
+  const { img, platform, title, date } = award;
   return (
     <section className="w-full flex gap-10">
       <img
-        src={image}
+        src={img}
         alt="award"
         className="w-64 aspect-auto object-cover rounded-2xl"
       />

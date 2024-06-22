@@ -1,4 +1,4 @@
-import { RedirectIcon } from "../../assets/SVG-Icons";
+import { RedirectIcon } from '../../assets/SVG-Icons';
 
 const BlogCard = ({ blog }) => {
   const { image, description, title, date } = blog;
@@ -11,10 +11,10 @@ const BlogCard = ({ blog }) => {
       />
       <div className="flex flex-col justify-between items-start gap-5">
         <div className="flex flex-col gap-2">
-         <div className="flex gap-2.5 items-center">
-         <h5 className="text-xl font-bold">{title}</h5>
-          <RedirectIcon className="fill-white" />
-         </div>
+          <div className="flex gap-2.5 items-center">
+            <h5 className="text-xl font-bold">{title}</h5>
+            <RedirectIcon className="fill-white" />
+          </div>
           <p className="text-[#d8d8d8] italic">{date}</p>
           <p>{description}</p>
         </div>
