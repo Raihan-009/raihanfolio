@@ -5,7 +5,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import toast from 'react-hot-toast';
 
 const AdminPageFeaturedSectionPannel = () => {
-  const [data, setData] = useState({});
+  const [imgUrl, setImgUrl] = useState('');
 
   const [newFeatureDataTitle, setNewFeatureDataTitle] = useState('');
   const [newFeatureDataDescription, setNewFeatureDataDescription] =
@@ -50,7 +50,7 @@ const AdminPageFeaturedSectionPannel = () => {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setData((prev) => ({ ...prev, img: downloadURL }));
+            setImgUrl(downloadURL);
           });
         }
       );
@@ -63,7 +63,7 @@ const AdminPageFeaturedSectionPannel = () => {
     const newFeatureData = {
       title: newFeatureDataTitle,
       description: newFeatureDataDescription,
-      img: data.img,
+      img: imgUrl,
       createdAt: serverTimestamp(),
     };
     try {
@@ -113,6 +113,7 @@ const AdminPageFeaturedSectionPannel = () => {
             setUploadedImage(e.target.files[0]);
           }}
         />
+        {per}
         <img
           height={'200px'}
           width={'200px'}

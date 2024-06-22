@@ -124,6 +124,7 @@ const AdminPageAwardSectionPannel = () => {
             setUploadedImage(e.target.files[0]);
           }}
         />
+        {per}
         <img
           height={'200px'}
           width={'200px'}

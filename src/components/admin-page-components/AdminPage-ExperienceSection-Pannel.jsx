@@ -4,27 +4,28 @@ import { db, storage } from '../../config/firebase';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import toast from 'react-hot-toast';
 
-const AdminPageAllProjectsPannel = () => {
+const AdminPageExperienceSectionPannel = () => {
   const [imgUrl, setImgUrl] = useState('');
 
-  const [newProjectTitle, setNewProjectTitle] = useState('');
-  const [newProjectDescription, setNewProjectDescription] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [newExperienceTitle, setNewExperienceTitle] = useState('');
+  const [newExperienceDescription, setNewExperienceDescription] = useState('');
+  const [workingYearRange, setWorkingYearRange] = useState('');
+  const [location, setLocation] = useState('');
+  const [role, setRole] = useState('');
   const [uploadedImage, setUploadedImage] = useState(null);
   const [per, setPerc] = useState(null);
 
-  const allProjectsDataCollectionRef = collection(db, 'AllProjectsData');
+  const allExperiencesDataCollectionRef = collection(db, 'AllExperiencesData');
 
   useEffect(() => {
     const uploadFile = () => {
       const uploadedImageName = new Date().getTime() + uploadedImage.name;
-      const projectsPhotoFolderRef = ref(
+      const experiencesPhotoFolderRef = ref(
         storage,
-        `project-photos/${uploadedImageName}`
+        `experience-photos/${uploadedImageName}`
       );
       const uploadTask = uploadBytesResumable(
-        projectsPhotoFolderRef,
+        experiencesPhotoFolderRef,
         uploadedImage
       );
 
@@ -59,25 +60,27 @@ const AdminPageAllProjectsPannel = () => {
     uploadedImage && uploadFile();
   }, [uploadedImage]);
 
-  const handleAddProjectData = async (e) => {
+  const handleAddExperienceData = async (e) => {
     e.preventDefault();
-    const newProjectData = {
-      title: newProjectTitle,
-      description: newProjectDescription,
-      img: imgUrl,
-      startDate: startDate,
-      endDate: endDate,
+    const newExperienceData = {
+      title: newExperienceTitle,
+      description: newExperienceDescription,
+      image: imgUrl,
+      date: workingYearRange,
+      location: location,
+      role: role,
       createdAt: serverTimestamp(),
     };
     try {
-      await addDoc(allProjectsDataCollectionRef, newProjectData);
-      setNewProjectTitle('');
-      setNewProjectDescription('');
-      setStartDate('');
-      setEndDate('');
+      await addDoc(allExperiencesDataCollectionRef, newExperienceData);
+      setNewExperienceTitle('');
+      setNewExperienceDescription('');
+      setWorkingYearRange('');
+      setRole('');
+      setLocation('');
       setUploadedImage(null);
       setPerc(null);
-      toast.success('Project Added Successfully');
+      toast.success('Experience Added Successfully');
       document.getElementById('myForm').reset();
     } catch (error) {
       console.error('Error adding document: ', error);
@@ -86,47 +89,56 @@ const AdminPageAllProjectsPannel = () => {
 
   return (
     <div className="my-4">
-      <h2 className="text-xl text-center">Add Project</h2>
-      {/* Adding Projects Data Form */}
+      <h2 className="text-xl text-center">Add Experience</h2>
+      {/* Adding Experieneces Data Form */}
       <form
         id="myForm"
         className="flex my-4 p-4  mx-auto flex-col gap-5 justify-center items-center bg-blue-100 text-black"
-        onSubmit={handleAddProjectData}
+        onSubmit={handleAddExperienceData}
       >
         <input
           type="text"
           required
-          value={newProjectTitle}
-          placeholder="Project Title"
+          value={newExperienceTitle}
+          placeholder="Experience Title"
           onChange={(e) => {
-            setNewProjectTitle(e.target.value);
+            setNewExperienceTitle(e.target.value);
           }}
         />
         <textarea
           type="text"
           required
-          placeholder="Project Description"
-          value={newProjectDescription}
+          placeholder="Experience Description"
+          value={newExperienceDescription}
           onChange={(e) => {
-            setNewProjectDescription(e.target.value);
+            setNewExperienceDescription(e.target.value);
           }}
         />
         <input
           type="text"
           required
-          placeholder="Start Date"
-          value={startDate}
+          placeholder="Working Year Range "
+          value={workingYearRange}
           onChange={(e) => {
-            setStartDate(e.target.value);
+            setWorkingYearRange(e.target.value);
           }}
         />
         <input
           type="text"
           required
-          placeholder="End Date"
-          value={endDate}
+          placeholder="Location"
+          value={location}
           onChange={(e) => {
-            setEndDate(e.target.value);
+            setLocation(e.target.value);
+          }}
+        />
+        <input
+          type="text"
+          required
+          placeholder="Role"
+          value={role}
+          onChange={(e) => {
+            setRole(e.target.value);
           }}
         />
         <input
@@ -159,4 +171,4 @@ const AdminPageAllProjectsPannel = () => {
   );
 };
 
-export default AdminPageAllProjectsPannel;
+export default AdminPageExperienceSectionPannel;
