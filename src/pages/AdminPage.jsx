@@ -4,6 +4,7 @@ import AdminPageAwardSectionPannel from '../components/admin-page-components/Adm
 import AdminPageFeaturedSectionPannel from '../components/admin-page-components/AdminPage-Featured-Section-Pannel';
 import AdminPageBlogPannel from '../components/admin-page-components/AdminPage-BlogSection-Pannel';
 import AdminPageExperienceSectionPannel from '../components/admin-page-components/AdminPage-ExperienceSection-Pannel';
+import AdminPageEducationSectionPannel from '../components/admin-page-components/AdminPage-EducationSection-Pannel';
 
 const AdminPage = () => {
   return (
@@ -14,8 +15,8 @@ const AdminPage = () => {
         <AdminPageAwardSectionPannel />
         <AdminPageBlogPannel />
         <AdminPageExperienceSectionPannel />
+        <AdminPageEducationSectionPannel />
       </div>
-      {/* <div>EducationSection Data</div>   */}
     </Layout>
   );
 };
