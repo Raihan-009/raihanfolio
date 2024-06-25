@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { db, storage } from '../../config/firebase';
+import { db, storage } from '../../../config/firebase';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import toast from 'react-hot-toast';
 
-const AdminPageFeaturedSectionPannel = () => {
+const AddFeatureForm = () => {
   const [imgUrl, setImgUrl] = useState('');
-
   const [newFeatureDataTitle, setNewFeatureDataTitle] = useState('');
   const [newFeatureDataDescription, setNewFeatureDataDescription] =
     useState('');
@@ -82,7 +81,6 @@ const AdminPageFeaturedSectionPannel = () => {
     <div className="my-4">
       <h2 className="text-xl text-center">Add Feature</h2>
       {/* Adding Featured Data Form */}
-
       <form
         id="myForm"
         className="flex my-4 p-4  mx-auto flex-col gap-5 justify-center items-center bg-pink-100 text-black"
@@ -136,4 +134,4 @@ const AdminPageFeaturedSectionPannel = () => {
   );
 };
 
-export default AdminPageFeaturedSectionPannel;
+export default AddFeatureForm;
