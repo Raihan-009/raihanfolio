@@ -1,44 +1,44 @@
-import { createContext, useContext } from 'react';
-import { initializeApp } from 'firebase/app';
-import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-import { getStorage, ref } from 'firebase/storage';
-import { set } from 'firebase/database';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../config/firebase';
+const collections = [
+  { name: 'AllProjectsData' },
+  { name: 'AllAwardsData' },
+  { name: 'AllBlogsData' },
+  { name: 'AllEducationCardData' },
+  { name: 'AllExperiencesData' },
+  { name: 'featuredData' },
+];
+const DataContext = createContext();
+const DataProvider = ({ children }) => {
+  const [data, setData] = useState({});
 
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: 'raihanfolio-731d6.firebaseapp.com',
-  projectId: 'raihanfolio-731d6',
-  storageBucket: 'raihanfolio-731d6.appspot.com',
-  messagingSenderId: '758337266327',
-  appId: '1:758337266327:web:7a2f1cd80ac01643a63fd2',
-  measurementId: 'G-J9285WXVY2',
-};
-//Firebase-App
-const firebaseApp = initializeApp(firebaseConfig);
-
-export const firebaseAuth = getAuth(firebaseApp);
-export const db = getFirestore(firebaseApp);
-export const storage = getStorage(firebaseApp);
-
-//context
-const FirebaseContext = createContext();
-//custom-hook
-export const useFirebase = () => useContext(FirebaseContext);
-
-export const FirebaseProvider = (props) => {
-  //provider-funtions
-  const signUpUserWithEmailAndPassword = ({ email, password }) => {
-    console.log(email, password);
-    return createUserWithEmailAndPassword(firebaseAuth, email, password);
+  const getSingleCollectionData = async (collectionName) => {
+    try {
+      const projectCollection = await getDocs(collection(db, collectionName));
+      const filterdData = projectCollection.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setData((prevData) => ({
+        ...prevData,
+        [collectionName]: filterdData,
+      }));
+    } catch (error) {
+      console.error(error);
+    }
   };
-  const putData = (key, data) => set(ref(db, key), data);
+  useEffect(() => {
+    const allData = async () => {
+      collections.map((collection) => getSingleCollectionData(collection.name));
+    };
+    allData();
+  }, []);
   return (
-    //used Provider for reading
-    <FirebaseContext.Provider
-      value={{ signUpUserWithEmailAndPassword, putData }}
-    >
-      {props.children}
-    </FirebaseContext.Provider>
+    <DataContext.Provider value={{ data }}>{children}</DataContext.Provider>
   );
 };
+
+const useData = () => useContext(DataContext);
+
+export { DataProvider, useData };

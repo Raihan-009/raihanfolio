@@ -3,14 +3,14 @@ import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
 import './index.css';
 import { BrowserRouter } from 'react-router-dom';
-import { FirebaseProvider } from './contexts/FirebaseContext';
+import { DataProvider } from './contexts/FirebaseContext';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <React.StrictMode>
-      <FirebaseProvider>
+      <DataProvider>
         <App />
-      </FirebaseProvider>
+      </DataProvider>
     </React.StrictMode>
   </BrowserRouter>
 );

@@ -1,25 +1,20 @@
 import { useEffect, useState } from 'react';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { deleteDoc, doc } from 'firebase/firestore';
 import { db, storage } from '../../../config/firebase';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import toast from 'react-hot-toast';
-import Form from '../../Form';
-const fields = [
-  { label: 'Title', name: 'title' },
-  { label: 'Date', name: 'date' },
-  { label: 'Description', name: 'description' },
-];
-const imageFolderOnCloud = { folder: 'featured-photos' };
-const AddFeatureForm = () => {
-  const [imgUrl, setImgUrl] = useState('');
 
-  const [newFeatureDataTitle, setNewFeatureDataTitle] = useState('');
-  const [newFeatureDataDescription, setNewFeatureDataDescription] =
-    useState('');
+const UpdateFeatureForm = ({ feature }) => {
+  console.log(feature);
+  const [imgUrl, setImgUrl] = useState(`${feature?.img}`);
+  const [newFeatureDataTitle, setNewFeatureDataTitle] = useState(
+    `${feature?.title}`
+  );
+  const [newFeatureDataDescription, setNewFeatureDataDescription] = useState(
+    `${feature?.description}`
+  );
   const [uploadedImage, setUploadedImage] = useState(null);
   const [per, setPerc] = useState(null);
-
-  const featuredDataCollectionRef = collection(db, 'featuredData');
 
   useEffect(() => {
     const uploadFile = () => {
@@ -64,35 +59,38 @@ const AddFeatureForm = () => {
     uploadedImage && uploadFile();
   }, [uploadedImage]);
 
-  const handleAddFeatureData = async (e) => {
+  const handleUpdateFeatureData = async (e) => {
     e.preventDefault();
-    const newFeatureData = {
-      title: newFeatureDataTitle,
-      description: newFeatureDataDescription,
-      img: imgUrl,
-      createdAt: serverTimestamp(),
-    };
     try {
-      await addDoc(featuredDataCollectionRef, newFeatureData);
-      setNewFeatureDataTitle('');
-      setNewFeatureDataDescription('');
-      setUploadedImage(null);
-      setPerc(null);
-      toast.success('Feature Data Added Successfully');
+      const docRef = db.collection('featuredData').doc(feature?.id);
+      await docRef.update({
+        title: newFeatureDataTitle,
+        description: newFeatureDataDescription,
+        img: imgUrl,
+      });
+      toast.success('Feature Data Updated Successfully');
       document.getElementById('myForm').reset();
     } catch (error) {
-      console.error('Error adding document: ', error);
+      console.error('Error updating document: ', error);
+    }
+  };
+
+  const deleteFeatureData = async () => {
+    try {
+      await deleteDoc(doc(db, 'featuredData', feature?.id));
+      toast.success('Feature Data Deleted Successfully');
+    } catch (error) {
+      console.error('Error deleting document: ', error);
     }
   };
   return (
     <div className="my-4">
-      <h2 className="text-xl text-center">Add Feature</h2>
+      <h2 className="text-xl text-center">update Feature</h2>
       {/* Adding Featured Data Form */}
-      <Form fields={fields} image={imageFolderOnCloud} />
       <form
         id="myForm"
         className="flex my-4 p-4  mx-auto flex-col gap-5 justify-center items-center bg-pink-100 text-black"
-        onSubmit={handleAddFeatureData}
+        onSubmit={handleUpdateFeatureData}
       >
         <input
           type="text"
@@ -123,11 +121,7 @@ const AddFeatureForm = () => {
         <img
           height={'200px'}
           width={'200px'}
-          src={
-            uploadedImage
-              ? URL.createObjectURL(uploadedImage)
-              : 'https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg'
-          }
+          src={uploadedImage ? URL.createObjectURL(uploadedImage) : imgUrl}
           alt=""
         />
         <button
@@ -137,9 +131,10 @@ const AddFeatureForm = () => {
         >
           Add
         </button>
+        <button onClick={deleteFeatureData}>delete</button>
       </form>
     </div>
   );
 };
 
-export default AddFeatureForm;
+export default UpdateFeatureForm;

@@ -1,31 +1,18 @@
+import UpdateFeatureForm from './UpdateFeatureForm';
+import { useData } from '../../../contexts/FirebaseContext';
 import AddFeatureForm from './AddFeatureForm';
-import { useEffect, useState } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../../../config/firebase';
-const featuredDataCollectionRef = collection(db, 'featuredData');
 
 const AdminPageFeaturedSectionPannel = () => {
-  const [featuredData, setFeaturedData] = useState([]);
-  // Fetching all featured data from firebase
-  const getAllFeaturedData = async () => {
-    try {
-      const data = await getDocs(featuredDataCollectionRef);
-      const filterdData = data.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setFeaturedData(filterdData);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  useEffect(() => {
-    getAllFeaturedData();
-  }, [featuredData]);
+  const data = useData();
+  const featuredData = data.data.featuredData;
+
   return (
     <div>
-      {featuredData.map((data, index) => (
-        <AddFeatureForm key={index} feature={data} />
+      <div>
+        <AddFeatureForm />
+      </div>
+      {featuredData?.map((data, index) => (
+        <UpdateFeatureForm key={index} feature={data} />
       ))}
     </div>
   );
