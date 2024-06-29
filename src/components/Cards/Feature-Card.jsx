@@ -1,9 +1,9 @@
 const FeatureCard = ({ feature }) => {
-  const { title, description, img } = feature;
+  const { title, description, image } = feature;
   return (
     <div className="flex flex-col rounded-xl bg-card">
       <img
-        src={img}
+        src={image}
         alt="image"
         className="w-full aspect-auto rounded-t-xl object-cover"
       />

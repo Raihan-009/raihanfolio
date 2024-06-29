@@ -1,11 +1,11 @@
 import { RedirectIcon } from '../../assets/SVG-Icons';
 
 const ProjectCard = ({ project }) => {
-  const { title, description, startDate, endDate, img } = project;
+  const { title, description, startDate, endDate, image } = project;
   return (
     <div className="flex flex-col gap-6">
       <img
-        src={img}
+        src={image}
         alt=""
         className="w-full aspect-auto rounded-xl object-cover"
       />

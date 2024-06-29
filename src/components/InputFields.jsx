@@ -1,4 +1,14 @@
-export const TextInputField = ({ label, placeholder, setFormData, name }) => {
+import { useEffect } from 'react';
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { storage } from '../config/firebase';
+
+export const TextInputField = ({
+  label,
+  placeholder,
+  setFormData,
+  name,
+  value,
+}) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -14,6 +24,7 @@ export const TextInputField = ({ label, placeholder, setFormData, name }) => {
         className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow dark:bg-white-600 dark:text-black"
         type="text"
         name={name}
+        value={value}
         placeholder={placeholder}
         required
         onChange={handleChange}
@@ -21,7 +32,13 @@ export const TextInputField = ({ label, placeholder, setFormData, name }) => {
     </div>
   );
 };
-export const TextAreaField = ({ label, placeholder, setFormData, name }) => {
+export const TextAreaField = ({
+  label,
+  placeholder,
+  setFormData,
+  name,
+  value,
+}) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -36,13 +53,79 @@ export const TextAreaField = ({ label, placeholder, setFormData, name }) => {
         className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow dark:bg-white-600 dark:text-black"
         required
         name={name}
+        value={value}
         placeholder={placeholder}
         onChange={handleChange}
       />
     </div>
   );
 };
-export const FileInputField = ({ setDocument }) => {
+export const FileInputField = ({
+  document,
+  setDocument,
+  setPerc,
+  setFormdata,
+  imageOption,
+}) => {
+  //upload file to firebase storage
+  useEffect(() => {
+    const uploadFile = async () => {
+      const uploadedImageName = new Date().getTime() + document.name;
+      const storageFolderName = imageOption
+        ? imageOption.folderName
+        : 'other-photos';
+      const featuredPhotoFolderRef = ref(
+        storage,
+        `${storageFolderName}/${uploadedImageName}`
+      );
+      const uploadTask = uploadBytesResumable(featuredPhotoFolderRef, document);
+
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          setPerc(progress);
+          switch (snapshot.state) {
+            case 'paused':
+              console.log('Upload is paused');
+              break;
+            case 'running':
+              console.log('Upload is running');
+              break;
+            default:
+              break;
+          }
+        },
+        (error) => {
+          console.log(error);
+        },
+        () => {
+          // After upload completes, wait then get the download URL
+          setPerc(99);
+          getDownloadURLAfterUpload(uploadTask.snapshot.ref);
+          setPerc(null);
+        }
+      );
+    };
+
+    // Define the async function to get the download URL
+    const getDownloadURLAfterUpload = async (ref) => {
+      try {
+        const downloadURL = await getDownloadURL(ref);
+        console.log('File available at', downloadURL);
+        setFormdata((prevData) => ({
+          ...prevData,
+          image: downloadURL,
+        }));
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
+    document ? uploadFile() : null;
+  }, [setFormdata, setPerc, imageOption, document]);
+
   const handleChange = (e) => {
     setDocument(e.target.files[0]);
   };
@@ -77,14 +160,17 @@ export const FileInputField = ({ setDocument }) => {
     </div>
   );
 };
-export const Button = ({ type, color, text, position }) => {
+
+export const Button = ({ type, color, text, position, per }) => {
   return (
     <div className={`flex justify-${position}`}>
       <button
-        className={`py-1.5 px-3 m-1 text-center bg-${color}-700 border rounded-md text-white  hover:bg-${color}-500 hover:text-white-100 dark:text-white-200 dark:bg-${color}-700`}
+        disabled={per !== null && per < 100}
+        className={`py-1.5 px-3 m-1 text-center bg-green-700 border rounded-md text-white  hover:bg-${color}-500 hover:text-white-100 dark:text-white-200 dark:bg-green-700 ${per !== null && per < 100 ? 'opacity-50 cursor-not-allowed' : ''}`}
         type={type ? type : 'button'}
+        style={{ backgroundColor: color }}
       >
-        {text}
+        {per !== 100 && per != null ? `${per} % uploaded` : text}
       </button>
     </div>
   );

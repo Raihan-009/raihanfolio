@@ -1,5 +1,6 @@
+import AdminSidebar from './AdminSidebar';
 import Sidebar from './Sidebar';
-const Layout = ({ children }) => {
+const Layout = ({ children, admin = false }) => {
   return (
     <div className="flex justify-center bg-contents font-inter">
       <main
@@ -8,7 +9,7 @@ const Layout = ({ children }) => {
         //   maxWidth: "1440px",
         // }}
       >
-        <Sidebar />
+        {admin ? <AdminSidebar /> : <Sidebar />}
         <section className="px-20">
           {children ? children : <p>Nothing Added</p>}
         </section>
