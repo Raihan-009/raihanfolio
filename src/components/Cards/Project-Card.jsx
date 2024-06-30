@@ -1,4 +1,4 @@
-import { RedirectIcon } from "../../assets/SVG-Icons";
+import { RedirectIcon } from '../../assets/SVG-Icons';
 
 const ProjectCard = ({ project }) => {
   const { title, description, startDate, endDate, image } = project;

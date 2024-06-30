@@ -1,4 +1,4 @@
-import { RedirectIcon } from "../../assets/SVG-Icons";
+import { RedirectIcon } from '../../assets/SVG-Icons';
 
 const AwardCard = ({ award }) => {
   const { image, platform, title, date } = award;
@@ -17,7 +17,7 @@ const AwardCard = ({ award }) => {
         </div>
         <button className="flex gap-2 px-6 py-3 border-0.5 rounded-lg border-borderline text-sm font-bold">
           <span>Show Certificate</span>
-          <RedirectIcon className='fill-white'/>
+          <RedirectIcon className="fill-white" />
         </button>
       </div>
     </section>

@@ -1,5 +1,6 @@
-import Sidebar from "./Sidebar";
-const Layout = ({ children }) => {
+import AdminSidebar from './AdminSidebar';
+import Sidebar from './Sidebar';
+const Layout = ({ children, admin = false }) => {
   return (
     <div className="flex justify-center bg-contents font-inter">
       <main
@@ -8,8 +9,10 @@ const Layout = ({ children }) => {
         //   maxWidth: "1440px",
         // }}
       >
-        <Sidebar />
-        <section className="px-20">{children ? children : <p>Nothing Added</p>}</section>
+        {admin ? <AdminSidebar /> : <Sidebar />}
+        <section className="px-20">
+          {children ? children : <p>Nothing Added</p>}
+        </section>
       </main>
     </div>
   );
