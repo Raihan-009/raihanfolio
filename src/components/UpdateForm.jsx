@@ -8,17 +8,20 @@ import {
 
 import Loader from './Loader';
 
-const Form = ({
+const UpdateForm = ({
   handleSubmit,
-  setFormdata,
-  loading,
   fields,
+  updateFormData,
+  setUpdateFormdata,
+  data,
+  loading,
   imageOption = false,
   imageUrl = 'https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg',
 }) => {
   const [document, setDocument] = useState(null);
   const [per, setPerc] = useState(null);
-
+  console.log('fields', fields);
+  console.log('updateFormData', updateFormData);
   return (
     <div className="flex justify-center my-4 px-8">
       <form className="max-w-2xl" onSubmit={handleSubmit}>
@@ -36,20 +39,20 @@ const Form = ({
                   placeholder={
                     field.placeholder ? field.placeholder : field.label
                   }
-                  value={field.value}
+                  value={updateFormData[field.name]}
                   name={field.name}
-                  setFormData={setFormdata}
+                  setFormData={setUpdateFormdata}
                 />
               ) : (
                 <TextAreaField
                   key={index}
                   label={field.label}
-                  value={field.value}
+                  value={updateFormData[field.name]}
                   placeholder={
                     field.placeholder ? field.placeholder : field.label
                   }
                   name={field.name}
-                  setFormData={setFormdata}
+                  setFormData={setUpdateFormdata}
                 />
               )
             )}
@@ -59,14 +62,14 @@ const Form = ({
                   document={document}
                   setDocument={setDocument}
                   setPerc={setPerc}
-                  setFormdata={setFormdata}
+                  setFormdata={setUpdateFormdata}
                   imageOption={imageOption}
                   name={'image'}
                 />
                 <img
                   height={'200px'}
                   width={'200px'}
-                  src={document ? URL.createObjectURL(document) : imageUrl}
+                  src={data ? data?.image : imageUrl}
                   alt=""
                 />
               </div>
@@ -75,7 +78,7 @@ const Form = ({
               per={per}
               type="submit"
               color="green"
-              text="Add Feature"
+              text="Update Feature"
               position="center"
             />
           </div>
@@ -85,4 +88,4 @@ const Form = ({
   );
 };
 
-export default Form;
+export default UpdateForm;

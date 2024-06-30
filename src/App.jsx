@@ -21,27 +21,24 @@ function App() {
         <Route path="/admin" element={<AdminPage />}>
           <Route
             path="education-setting"
-            element={<AdminPageFeaturedSectionPannel />}
+            element={<AdminPageEducationSectionPannel />}
           />
           <Route
             path="projects-setting"
-            element={<AdminPageFeaturedSectionPannel />}
+            element={<AdminPageAllProjectsPannel />}
           />
           <Route
             path="feature-setting"
             element={<AdminPageFeaturedSectionPannel />}
           />
-          <Route
-            path="blog-setting"
-            element={<AdminPageFeaturedSectionPannel />}
-          />
+          <Route path="blog-setting" element={<AdminPageBlogPannel />} />
           <Route
             path="award-setting"
-            element={<AdminPageFeaturedSectionPannel />}
+            element={<AdminPageAwardSectionPannel />}
           />
           <Route
             path="experience-setting"
-            element={<AdminPageFeaturedSectionPannel />}
+            element={<AdminPageExperienceSectionPannel />}
           />
         </Route>
       </Routes>

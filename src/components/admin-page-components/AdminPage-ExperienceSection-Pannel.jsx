@@ -1,172 +1,135 @@
-import { useEffect, useState } from 'react';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { db, storage } from '../../config/firebase';
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { push, ref, remove, set, update } from 'firebase/database';
+import { v4 as uuidv4 } from 'uuid';
+import Form from '../Form';
+import { database } from '../../config/firebase';
+import { Button } from '../InputFields';
+import { useFirebase } from '../../contexts/FirebaseContext';
+import { Timeline } from 'keep-react';
+import UpdateForm from '../UpdateForm';
+export const ExperienceList = ({ experiences, handleEditExperience }) => {
+  return (
+    <div className="flex">
+      {experiences?.map((experience, index) => (
+        <Timeline.Item key={index} className="pl-5">
+          <Timeline.Content className="flex flex-col gap-1">
+            <img
+              src={experience?.image}
+              alt=""
+              className="aspect-auto object-cover"
+            />
+            <p className="text-sm ">{experience?.date}</p>
+            <p className="text-sm ">{experience?.location}</p>
+            <p className="text-lg font-bold ">{experience?.role}</p>
+            <h6 className="text-2xl font-bold ">{experience?.title}</h6>
+            <p className=" ">{experience?.description}</p>
+          </Timeline.Content>
+          <Button
+            text="Edit Button"
+            handleClick={() => handleEditExperience(experience)}
+          />
+        </Timeline.Item>
+      ))}
+    </div>
+  );
+};
+const fields = [
+  { label: 'Title', name: 'title' },
+  { label: 'Description', name: 'description' },
+  { label: 'Location', name: 'location' },
+  { label: 'Date', name: 'date', placeholder: '2019 - 2021' },
+  { label: 'Role', name: 'role', placeholder: 'Frontend Developer' },
+];
+const imageFolderOnCloud = { folderName: 'experience-photos' };
 
 const AdminPageExperienceSectionPannel = () => {
-  const [imgUrl, setImgUrl] = useState('');
-
-  const [newExperienceTitle, setNewExperienceTitle] = useState('');
-  const [newExperienceDescription, setNewExperienceDescription] = useState('');
-  const [workingYearRange, setWorkingYearRange] = useState('');
-  const [location, setLocation] = useState('');
-  const [role, setRole] = useState('');
-  const [uploadedImage, setUploadedImage] = useState(null);
-  const [per, setPerc] = useState(null);
-
-  const allExperiencesDataCollectionRef = collection(db, 'AllExperiencesData');
-
-  useEffect(() => {
-    const uploadFile = () => {
-      const uploadedImageName = new Date().getTime() + uploadedImage.name;
-      const experiencesPhotoFolderRef = ref(
-        storage,
-        `experience-photos/${uploadedImageName}`
-      );
-      const uploadTask = uploadBytesResumable(
-        experiencesPhotoFolderRef,
-        uploadedImage
-      );
-
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload is ' + progress + '% done');
-          setPerc(progress);
-          switch (snapshot.state) {
-            case 'paused':
-              console.log('Upload is paused');
-              break;
-            case 'running':
-              console.log('Upload is running');
-              break;
-            default:
-              break;
-          }
-        },
-        (error) => {
-          console.log(error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setImgUrl(downloadURL);
-          });
-        }
-      );
-    };
-    uploadedImage && uploadFile();
-  }, [uploadedImage]);
-
-  const handleAddExperienceData = async (e) => {
+  const data = useFirebase();
+  const experiences = data?.AllExperienceData;
+  const [loading, setLoading] = useState(false);
+  const [addFormData, setAddFormData] = useState({});
+  const [updateFormData, setUpdateFormData] = useState({});
+  const [selectedExperience, setSelectedExperience] = useState(null);
+  const addExperience = async (e) => {
     e.preventDefault();
-    const newExperienceData = {
-      title: newExperienceTitle,
-      description: newExperienceDescription,
-      image: imgUrl,
-      date: workingYearRange,
-      location: location,
-      role: role,
-      createdAt: serverTimestamp(),
-    };
     try {
-      await addDoc(allExperiencesDataCollectionRef, newExperienceData);
-      setNewExperienceTitle('');
-      setNewExperienceDescription('');
-      setWorkingYearRange('');
-      setRole('');
-      setLocation('');
-      setUploadedImage(null);
-      setPerc(null);
-      toast.success('Experience Added Successfully');
-      document.getElementById('myForm').reset();
+      setLoading(true);
+      const dataRef = ref(database, 'AllExpeienceData');
+      const newDataRef = push(dataRef);
+      await set(newDataRef, { ...addFormData, id: uuidv4() });
+      toast.success('Experience Data Added Successfully');
+      setLoading(false);
     } catch (error) {
-      console.error('Error adding document: ', error);
+      console.log(error);
     }
   };
 
+  const handleEditExperience = (experience) => {
+    setSelectedExperience(experience);
+    setUpdateFormData(experience);
+  };
+  const handleUpdateExperienceData = () => {
+    const dataRef = ref(database, `AllExpeienceData/${selectedExperience.id}`);
+    update(dataRef, selectedExperience);
+    setSelectedExperience(null);
+  };
+
+  //delete experience
+  const handleDeleteExperience = async () => {
+    try {
+      const dataRef = ref(
+        database,
+        `AllExpeienceData/${selectedExperience.id}`
+      );
+      await remove(dataRef);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="my-4">
-      <h2 className="text-xl text-center">Add Experience</h2>
-      {/* Adding Experieneces Data Form */}
-      <form
-        id="myForm"
-        className="flex my-4 p-4  mx-auto flex-col gap-5 justify-center items-center bg-blue-100 text-black"
-        onSubmit={handleAddExperienceData}
-      >
-        <input
-          type="text"
-          required
-          value={newExperienceTitle}
-          placeholder="Experience Title"
-          onChange={(e) => {
-            setNewExperienceTitle(e.target.value);
-          }}
-        />
-        <textarea
-          type="text"
-          required
-          placeholder="Experience Description"
-          value={newExperienceDescription}
-          onChange={(e) => {
-            setNewExperienceDescription(e.target.value);
-          }}
-        />
-        <input
-          type="text"
-          required
-          placeholder="Working Year Range "
-          value={workingYearRange}
-          onChange={(e) => {
-            setWorkingYearRange(e.target.value);
-          }}
-        />
-        <input
-          type="text"
-          required
-          placeholder="Location"
-          value={location}
-          onChange={(e) => {
-            setLocation(e.target.value);
-          }}
-        />
-        <input
-          type="text"
-          required
-          placeholder="Role"
-          value={role}
-          onChange={(e) => {
-            setRole(e.target.value);
-          }}
-        />
-        <input
-          type="file"
-          required
-          onChange={(e) => {
-            setUploadedImage(e.target.files[0]);
-          }}
-        />
-        {per}
-        <img
-          height={'200px'}
-          width={'200px'}
-          src={
-            uploadedImage
-              ? URL.createObjectURL(uploadedImage)
-              : 'https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg'
-          }
-          alt=""
-        />
-        <button
-          disabled={per !== null && per < 100}
-          className={`border-2 bg-green-100 px-4 ${per !== null && per < 100 ? 'opacity-50 cursor-not-allowed' : ''}`}
-          type="submit"
-        >
-          Add
-        </button>
-      </form>
+      <div className="flex ">
+        <div>
+          <h2 className="text-xl text-center">Add Experience</h2>
+          {/* Adding Single Featured Data Form */}
+          <Form
+            handleSubmit={addExperience}
+            loading={loading}
+            setFormdata={setAddFormData}
+            fields={fields}
+            imageOption={imageFolderOnCloud}
+          />
+          <Button
+            color="green"
+            text="Add Experience Collection"
+            position="center"
+          />
+        </div>
+        {selectedExperience && (
+          <div>
+            <h2 className="text-xl text-center">Edit Project Data</h2>
+            <UpdateForm
+              handleSubmit={handleUpdateExperienceData}
+              loading={loading}
+              setUpdateFormdata={setUpdateFormData}
+              fields={fields}
+              updateFormData={updateFormData}
+              data={selectedExperience}
+              imageOption={imageFolderOnCloud}
+            />
+            <Button
+              color="red"
+              text="Delete Project"
+              position="center"
+              onClick={handleDeleteExperience}
+            />
+          </div>
+        )}
+      </div>
+      <ExperienceList
+        experiences={experiences}
+        handleEditExperience={handleEditExperience}
+      />
     </div>
   );
 };

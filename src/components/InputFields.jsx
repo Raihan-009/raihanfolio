@@ -161,7 +161,7 @@ export const FileInputField = ({
   );
 };
 
-export const Button = ({ type, color, text, position, per }) => {
+export const Button = ({ type, color, text, position, per, handleClick }) => {
   return (
     <div className={`flex justify-${position}`}>
       <button
@@ -169,6 +169,7 @@ export const Button = ({ type, color, text, position, per }) => {
         className={`py-1.5 px-3 m-1 text-center bg-green-700 border rounded-md text-white  hover:bg-${color}-500 hover:text-white-100 dark:text-white-200 dark:bg-green-700 ${per !== null && per < 100 ? 'opacity-50 cursor-not-allowed' : ''}`}
         type={type ? type : 'button'}
         style={{ backgroundColor: color }}
+        onClick={handleClick ? handleClick : null}
       >
         {per !== 100 && per != null ? `${per} % uploaded` : text}
       </button>
