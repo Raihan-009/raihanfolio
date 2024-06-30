@@ -1,148 +1,124 @@
-import { useEffect, useState } from 'react';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { db, storage } from '../../config/firebase';
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { ref, remove, set, update } from 'firebase/database';
+import AwardCard from '../Cards/Award-Card';
+import Form from '../Form';
+import { database } from '../../config/firebase';
+import { Button } from '../InputFields';
+import { useFirebase } from '../../contexts/FirebaseContext';
+import UpdateForm from '../UpdateForm';
+const generateRandomId = () => {
+  return Math.random().toString(36).substring(2, 9);
+};
+export const AwardList = ({ awards, handleEditAward }) => {
+  return (
+    <div className="py-8 mx-auto">
+      <h2 className="text-xl text-center">All Awards</h2>
+      <div className="flex flex-col gap-2 p-4">
+        {awards?.map((award, index) => (
+          <div
+            key={index}
+            className="flex justify-center items-center gap-2 p-4"
+          >
+            <AwardCard award={award} />
+            <Button
+              text="Click To Open Edit Form"
+              handleClick={() => handleEditAward(award)}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+const fields = [
+  { label: 'Title', name: 'title' },
+  { label: 'Platform', name: 'platform' },
+  { label: 'Date', name: 'date', placeholder: 'June 2021' },
+];
+const imageFolderOnCloud = { folderName: 'award-photos' };
 
 const AdminPageAwardSectionPannel = () => {
-  const [imgUrl, setImgUrl] = useState('');
+  const data = useFirebase();
+  const awards = data?.AllAwardData;
 
-  const [newAwardTitle, setNewAwardTitle] = useState('');
-  const [uploadedImage, setUploadedImage] = useState(null);
-  const [platform, setPlatform] = useState('');
-  const [per, setPerc] = useState(null);
-  const [awardGettingDate, setAwardGettingDate] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [addFormData, setAddFormData] = useState({});
+  const [updateFormData, setUpdateFormData] = useState({});
+  const [selectedAward, setSelectedAward] = useState(null);
 
-  const allAwardsDataCollectionRef = collection(db, 'AllAwardsData');
-
-  useEffect(() => {
-    const uploadFile = () => {
-      const uploadedImageName = new Date().getTime() + uploadedImage.name;
-      const awardsPhotoFolderRef = ref(
-        storage,
-        `awards-photos/${uploadedImageName}`
-      );
-      const uploadTask = uploadBytesResumable(
-        awardsPhotoFolderRef,
-        uploadedImage
-      );
-
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload is ' + progress + '% done');
-          setPerc(progress);
-          switch (snapshot.state) {
-            case 'paused':
-              console.log('Upload is paused');
-              break;
-            case 'running':
-              console.log('Upload is running');
-              break;
-            default:
-              break;
-          }
-        },
-        (error) => {
-          console.log(error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setImgUrl(downloadURL);
-          });
-        }
-      );
-    };
-    uploadedImage && uploadFile();
-  }, [uploadedImage]);
-
-  const handleAddAwardData = async (e) => {
+  const addAward = async (e) => {
     e.preventDefault();
     try {
-      const newFeatureData = {
-        title: newAwardTitle,
-        img: imgUrl,
-        platform: platform,
-        date: awardGettingDate,
-        createdAt: serverTimestamp(),
-      };
-      await addDoc(allAwardsDataCollectionRef, newFeatureData);
-      setNewAwardTitle('');
-      setPlatform('');
-      setAwardGettingDate('');
-      setUploadedImage(null);
-      setPerc(null);
-      toast.success('Award Added Successfully');
-      document.getElementById('myForm').reset();
+      setLoading(true);
+      const randomId = generateRandomId();
+      const dataRef = ref(database, `AllAwardData/${randomId}`);
+      await set(dataRef, { ...addFormData, id: randomId });
+      toast.success('Award Data Added Successfully');
+      setLoading(false);
     } catch (error) {
-      console.error('Error adding document: ', error);
+      console.log(error);
     }
   };
 
+  const handleEditAward = (award) => {
+    setSelectedAward(award);
+    setUpdateFormData(award);
+  };
+  const handleUpdateAwardData = async () => {
+    const dataRef = ref(database, `AllAwardData/${selectedAward.id}`);
+    await update(dataRef, selectedAward);
+    toast.success('Update Successful');
+    setSelectedAward(null);
+  };
+
+  //delete award
+  const handleDeleteAward = async () => {
+    try {
+      const dataRef = ref(database, `AllAwardData/${selectedAward.id}`);
+      await remove(dataRef);
+      toast.success('Delete Successful');
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="my-4">
-      <h2 className="text-xl text-center">Add Award</h2>
-      {/* Adding Awards Data Form */}
-      <form
-        id="myForm"
-        className="flex my-4 p-4  mx-auto flex-col gap-5 justify-center items-center bg-violet-100 text-black"
-        onSubmit={handleAddAwardData}
-      >
-        <input
-          type="text"
-          required
-          value={newAwardTitle}
-          placeholder="Award Title"
-          onChange={(e) => {
-            setNewAwardTitle(e.target.value);
-          }}
-        />
-        <input
-          type="text"
-          required
-          placeholder="Platform Name"
-          value={platform}
-          onChange={(e) => {
-            setPlatform(e.target.value);
-          }}
-        />
-        <input
-          type="text"
-          required
-          placeholder="Date of Getting Award"
-          value={awardGettingDate}
-          onChange={(e) => {
-            setAwardGettingDate(e.target.value);
-          }}
-        />
-        <input
-          type="file"
-          required
-          onChange={(e) => {
-            setUploadedImage(e.target.files[0]);
-          }}
-        />
-        {per}
-        <img
-          height={'200px'}
-          width={'200px'}
-          src={
-            uploadedImage
-              ? URL.createObjectURL(uploadedImage)
-              : 'https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg'
-          }
-          alt=""
-        />
-        <button
-          disabled={per !== null && per < 100}
-          className={`border-2 bg-green-100 px-4 ${per !== null && per < 100 ? 'opacity-50 cursor-not-allowed' : ''}`}
-          type="submit"
-        >
-          Add
-        </button>
-      </form>
+      <div className="flex justify-center items-center">
+        <div>
+          <h2 className="text-xl text-center">Add Award</h2>
+          {/* Adding Single Featured Data Form */}
+          <Form
+            handleSubmit={addAward}
+            loading={loading}
+            setFormdata={setAddFormData}
+            fields={fields}
+            imageOption={imageFolderOnCloud}
+          />
+          <Button color="green" text="Add Award Collection" position="center" />
+        </div>
+        {selectedAward && (
+          <div>
+            <h2 className="text-xl text-center">Edit Project Data</h2>
+            <UpdateForm
+              handleSubmit={handleUpdateAwardData}
+              loading={loading}
+              setUpdateFormdata={setUpdateFormData}
+              fields={fields}
+              updateFormData={updateFormData}
+              data={selectedAward}
+              imageOption={imageFolderOnCloud}
+            />
+            <Button
+              color="red"
+              text="Delete Project"
+              position="center"
+              handleClick={handleDeleteAward}
+            />
+          </div>
+        )}
+      </div>
+      <AwardList awards={awards} handleEditAward={handleEditAward} />
     </div>
   );
 };

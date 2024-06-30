@@ -1,44 +1,52 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../config/firebase';
-const collections = [
-  { name: 'AllProjectsData' },
-  { name: 'AllAwardsData' },
-  { name: 'AllBlogsData' },
-  { name: 'AllEducationCardData' },
-  { name: 'AllExperiencesData' },
-  { name: 'featuredData' },
-];
-const DataContext = createContext();
-const DataProvider = ({ children }) => {
+import { ref, get } from 'firebase/database';
+import { database } from '../config/firebase';
+
+// Create Firebase context
+const FirebaseContext = createContext();
+
+// Custom hook to use the Firebase context
+export const useFirebase = () => useContext(FirebaseContext);
+
+// Firebase provider component
+export const FirebaseProvider = ({ children }) => {
   const [data, setData] = useState({});
 
-  const getSingleCollectionData = async (collectionName) => {
-    try {
-      const projectCollection = await getDocs(collection(db, collectionName));
-      const filterdData = projectCollection.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setData((prevData) => ({
-        ...prevData,
-        [collectionName]: filterdData,
-      }));
-    } catch (error) {
-      console.error(error);
-    }
+  // Function to fetch all data from collections
+  const getAllData = async () => {
+    const collections = [
+      'AllProjectData',
+      'AllAwardData',
+      'AllBlogData',
+      'AllFeatureData',
+      'AllEducationData',
+      'AllExperienceData',
+    ]; // Example collections
+
+    const promises = collections.map(async (collectionName) => {
+      const snapshot = await get(ref(database, collectionName));
+      if (snapshot.exists()) {
+        return { [collectionName]: Object.values(snapshot.val()) };
+      } else {
+        console.log('No data available for:', collectionName);
+        return { [collectionName]: [] };
+      }
+    });
+
+    Promise.all(promises).then((results) => {
+      const allData = results.reduce(
+        (acc, current) => ({ ...acc, ...current }),
+        {}
+      );
+      setData(allData);
+    });
   };
+
   useEffect(() => {
-    const allData = async () => {
-      collections.map((collection) => getSingleCollectionData(collection.name));
-    };
-    allData();
+    getAllData();
   }, []);
+
   return (
-    <DataContext.Provider value={{ data }}>{children}</DataContext.Provider>
+    <FirebaseContext.Provider value={data}>{children}</FirebaseContext.Provider>
   );
 };
-
-const useData = () => useContext(DataContext);
-
-export { DataProvider, useData };
