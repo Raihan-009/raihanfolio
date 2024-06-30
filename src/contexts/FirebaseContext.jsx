@@ -41,7 +41,6 @@ export const FirebaseProvider = ({ children }) => {
       setData(allData);
     });
   };
-
   useEffect(() => {
     getAllData();
   }, []);
