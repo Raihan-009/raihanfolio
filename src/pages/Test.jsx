@@ -132,9 +132,10 @@ export const AwardList = ({ awards }) => {
 // src/Test.js
 import { useState, useEffect } from 'react';
 import { ref, set, push, onValue, update, remove } from 'firebase/database';
-import { v4 as uuidv4 } from 'uuid';
 import { database } from '../config/firebase';
-
+const generateRandomId = () => {
+  return Math.random().toString(36).substring(2, 9);
+};
 const AllProjectData = [
   {
     image:
@@ -307,6 +308,7 @@ const AllAwardData = [
   {
     image:
       'https://firebasestorage.googleapis.com/v0/b/raihanfolio-731d6.appspot.com/o/awards-photos%2F1718969793445flower-729512.jpg?alt=media&token=3a1a4744-72ab-4182-821c-74fb6411e24e',
+    platform: 'Coursera',
     description:
       "Almost all of you are familiar with the dinosaur game which is used play in google chrome in both offline or online.So I have tried to develop a gamebot named 'dinosaurBot' which can play automatically.",
     title: 'Python 3 Programming specialization',
@@ -315,6 +317,7 @@ const AllAwardData = [
   {
     image:
       'https://firebasestorage.googleapis.com/v0/b/raihanfolio-731d6.appspot.com/o/awards-photos%2F1718969793445flower-729512.jpg?alt=media&token=3a1a4744-72ab-4182-821c-74fb6411e24e',
+    platform: 'Coursera',
     description:
       "Almost all of you are familiar with the dinosaur game which is used play in google chrome in both offline or online.So I have tried to develop a gamebot named 'dinosaurBot' which can play automatically.",
     title: 'Networking',
@@ -323,6 +326,7 @@ const AllAwardData = [
   {
     image:
       'https://firebasestorage.googleapis.com/v0/b/raihanfolio-731d6.appspot.com/o/awards-photos%2F1718969793445flower-729512.jpg?alt=media&token=3a1a4744-72ab-4182-821c-74fb6411e24e',
+    platform: 'Udemy',
     description:
       "Almost all of you are familiar with the dinosaur game which is used play in google chrome in both offline or online.So I have tried to develop a gamebot named 'dinosaurBot' which can play automatically.",
     title: 'Networking',
@@ -331,6 +335,7 @@ const AllAwardData = [
   {
     image:
       'https://firebasestorage.googleapis.com/v0/b/raihanfolio-731d6.appspot.com/o/awards-photos%2F1718969793445flower-729512.jpg?alt=media&token=3a1a4744-72ab-4182-821c-74fb6411e24e',
+    platform: 'Udemy',
     description:
       "Almost all of you are familiar with the dinosaur game which is used play in google chrome in both offline or online.So I have tried to develop a gamebot named 'dinosaurBot' which can play automatically.",
     title: 'Crash course on Python',
@@ -375,10 +380,10 @@ const Test = () => {
     setNewProject({ ...newProject, [name]: value });
   };
 
-  const handleAddSingleProject = () => {
-    const projectsRef = ref(database, 'projects');
-    const newProjectRef = push(projectsRef);
-    set(newProjectRef, { ...newProject, id: uuidv4() });
+  const handleAddSingleProject = async () => {
+    const randomId = generateRandomId();
+    const dataRef = ref(database, `AllBlogData/${randomId}`);
+    await set(dataRef, { ...newProject, id: randomId });
     setNewProject({
       image: '',
       title: '',
@@ -389,12 +394,12 @@ const Test = () => {
   };
 
   //CREATE Project Collection button
-  const handleAddProject = () => {
-    const projectsRef = ref(database, 'AllProjectData');
-    AllProjectData.forEach((project) => {
-      const newProjectRef = push(projectsRef);
-      set(newProjectRef, { ...project, id: uuidv4() });
-    });
+  const handleAddProject = async () => {
+    for (const data of AllAwardData) {
+      const randomId = generateRandomId();
+      const dataRef = ref(database, `AllAwardData/${randomId}`);
+      await set(dataRef, { ...data, id: randomId });
+    }
   };
 
   //update project

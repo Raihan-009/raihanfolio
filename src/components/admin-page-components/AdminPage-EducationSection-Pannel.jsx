@@ -1,32 +1,39 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { push, ref, remove, set, update } from 'firebase/database';
-import { v4 as uuidv4 } from 'uuid';
+import { ref, remove, set, update } from 'firebase/database';
 import Form from '../Form';
 import { database } from '../../config/firebase';
 import { Button } from '../InputFields';
 import { useFirebase } from '../../contexts/FirebaseContext';
 import { Timeline } from 'keep-react';
 import UpdateForm from '../UpdateForm';
+const generateRandomId = () => {
+  return Math.random().toString(36).substring(2, 9);
+};
 export const EducationList = ({ education, handleEditEducation }) => {
   return (
-    <div className="flex">
-      {education?.map((education, index) => (
-        <Timeline.Item key={index} className="pl-5">
-          <Timeline.Point className="w-2.5 h-2.5 -left-[5px] bg-[#3959C1] border-none" />
-          <Timeline.Content className="flex flex-col gap-1">
-            <p className="text-sm ">{education?.date}</p>
-            <p className="text-sm ">{education?.location}</p>
-            <p className="text-lg font-bold ">{education?.role}</p>
-            <h6 className="text-2xl font-bold ">{education?.title}</h6>
-            <p className=" ">{education?.description}</p>
-          </Timeline.Content>
-          <Button
-            text="Edit Button"
-            handleClick={() => handleEditEducation(education)}
-          />
-        </Timeline.Item>
-      ))}
+    <div className="my-4">
+      <h2 className="text-xl text-center">All Education Data</h2>
+      <div className="flex">
+        {education?.map((education, index) => (
+          <div
+            key={index}
+            className="flex flex-col justify-center items-center"
+          >
+            <Button
+              text="Click To Open Edit Form"
+              handleClick={() => handleEditEducation(education)}
+            />
+            <Timeline.Content className="flex flex-col gap-1">
+              <p className="text-sm ">{education?.date}</p>
+              <p className="text-sm ">{education?.location}</p>
+              <p className="text-lg font-bold ">{education?.role}</p>
+              <h6 className="text-2xl font-bold ">{education?.title}</h6>
+              <p className=" ">{education?.description}</p>
+            </Timeline.Content>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
@@ -50,9 +57,10 @@ const AdminPageEducationSectionPannel = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const dataRef = ref(database, 'AllExpeienceData');
-      const newDataRef = push(dataRef);
-      await set(newDataRef, { ...addFormData, id: uuidv4() });
+      setLoading(true);
+      const randomId = generateRandomId();
+      const dataRef = ref(database, `AllEducationData/${randomId}`);
+      await set(dataRef, { ...addFormData, id: randomId });
       toast.success('Education Data Added Successfully');
       setLoading(false);
     } catch (error) {
@@ -64,9 +72,10 @@ const AdminPageEducationSectionPannel = () => {
     setSelectedEducation(education);
     setUpdateFormData(education);
   };
-  const handleUpdateEducationData = () => {
+  const handleUpdateEducationData = async () => {
     const dataRef = ref(database, `AllExpeienceData/${selectedEducation.id}`);
-    update(dataRef, selectedEducation);
+    await update(dataRef, selectedEducation);
+    toast.success('Update Successful');
     setSelectedEducation(null);
   };
 
@@ -75,13 +84,14 @@ const AdminPageEducationSectionPannel = () => {
     try {
       const dataRef = ref(database, `AllExpeienceData/${selectedEducation.id}`);
       await remove(dataRef);
+      toast.success('Delete Successful');
     } catch (error) {
       console.log(error);
     }
   };
   return (
     <div className="my-4">
-      <div className="flex ">
+      <div className="flex  justify-center items-center">
         <div>
           <h2 className="text-xl text-center">Add Education</h2>
           {/* Adding Single Featured Data Form */}
@@ -114,7 +124,7 @@ const AdminPageEducationSectionPannel = () => {
               color="red"
               text="Delete Project"
               position="center"
-              onClick={handleDeleteEducation}
+              handleClick={handleDeleteEducation}
             />
           </div>
         )}

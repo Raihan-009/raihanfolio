@@ -1,25 +1,30 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { push, ref, remove, set, update } from 'firebase/database';
-import { v4 as uuidv4 } from 'uuid';
+import { ref, remove, set, update } from 'firebase/database';
 import ProjectCard from '../Cards/Project-Card';
 import Form from '../Form';
 import { database } from '../../config/firebase';
 import { Button } from '../InputFields';
 import { useFirebase } from '../../contexts/FirebaseContext';
 import UpdateForm from '../UpdateForm';
+const generateRandomId = () => {
+  return Math.random().toString(36).substring(2, 9);
+};
 export const ProjectList = ({ projects, handleEditProject }) => {
   return (
-    <div>
-      <h2>All Projects</h2>
-      <div className="flex gap-1">
+    <div className="my-4">
+      <h2 className="text-xl text-center">All Experiences</h2>
+      <div className="flex justify-center items-center gap-2 p-4">
         {projects?.map((project, index) => (
-          <div key={index} className="">
-            <ProjectCard project={project} />
+          <div
+            key={index}
+            className="flex flex-col justify-center items-center"
+          >
             <Button
-              text="Edit Button"
+              text="Click To Open Edit Form"
               handleClick={() => handleEditProject(project)}
             />
+            <ProjectCard project={project} />
           </div>
         ))}
       </div>
@@ -48,9 +53,9 @@ const AdminPageAllProjectsPannel = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const dataRef = ref(database, 'AllProjectData');
-      const newDataRef = push(dataRef);
-      await set(newDataRef, { ...addFormData, id: uuidv4() });
+      const randomId = generateRandomId();
+      const dataRef = ref(database, `AllProjectData/${randomId}`);
+      await set(dataRef, { ...addFormData, id: randomId });
       toast.success('Project Data Added Successfully');
       setLoading(false);
     } catch (error) {
@@ -62,9 +67,10 @@ const AdminPageAllProjectsPannel = () => {
     setSelectedProject(project);
     setUpdateFormData(project);
   };
-  const handleUpdateProjectData = () => {
+  const handleUpdateProjectData = async () => {
     const dataRef = ref(database, `AllProjectData/${selectedProject.id}`);
-    update(dataRef, updateFormData);
+    await update(dataRef, updateFormData);
+    toast.success('Update Successful');
     setSelectedProject(null);
   };
 
@@ -73,13 +79,14 @@ const AdminPageAllProjectsPannel = () => {
     try {
       const dataRef = ref(database, `AllProjectData/${selectedProject.id}`);
       await remove(dataRef);
+      toast.success('Delete Successful');
     } catch (error) {
       console.log(error);
     }
   };
   return (
     <div className="my-4">
-      <div className="flex justify-center">
+      <div className="flex justify-center items-center">
         <div>
           <h2 className="text-xl text-center">Add Project</h2>
           {/* Adding Single Featured Data Form */}

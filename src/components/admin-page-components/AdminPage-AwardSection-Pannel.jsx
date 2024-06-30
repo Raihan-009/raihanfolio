@@ -1,18 +1,20 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { push, ref, remove, set, update } from 'firebase/database';
-import { v4 as uuidv4 } from 'uuid';
+import { ref, remove, set, update } from 'firebase/database';
 import AwardCard from '../Cards/Award-Card';
 import Form from '../Form';
 import { database } from '../../config/firebase';
 import { Button } from '../InputFields';
 import { useFirebase } from '../../contexts/FirebaseContext';
 import UpdateForm from '../UpdateForm';
+const generateRandomId = () => {
+  return Math.random().toString(36).substring(2, 9);
+};
 export const AwardList = ({ awards, handleEditAward }) => {
   return (
-    <div>
-      <h2>All Awards</h2>
-      <div className="">
+    <div className="py-8 mx-auto">
+      <h2 className="text-xl text-center">All Awards</h2>
+      <div className="flex flex-col gap-2 p-4">
         {awards?.map((award, index) => (
           <div
             key={index}
@@ -20,7 +22,7 @@ export const AwardList = ({ awards, handleEditAward }) => {
           >
             <AwardCard award={award} />
             <Button
-              text="Edit Button"
+              text="Click To Open Edit Form"
               handleClick={() => handleEditAward(award)}
             />
           </div>
@@ -49,9 +51,9 @@ const AdminPageAwardSectionPannel = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const dataRef = ref(database, 'AllAwardData');
-      const newDataRef = push(dataRef);
-      await set(newDataRef, { ...addFormData, id: uuidv4() });
+      const randomId = generateRandomId();
+      const dataRef = ref(database, `AllAwardData/${randomId}`);
+      await set(dataRef, { ...addFormData, id: randomId });
       toast.success('Award Data Added Successfully');
       setLoading(false);
     } catch (error) {
@@ -63,9 +65,10 @@ const AdminPageAwardSectionPannel = () => {
     setSelectedAward(award);
     setUpdateFormData(award);
   };
-  const handleUpdateAwardData = () => {
+  const handleUpdateAwardData = async () => {
     const dataRef = ref(database, `AllAwardData/${selectedAward.id}`);
-    update(dataRef, selectedAward);
+    await update(dataRef, selectedAward);
+    toast.success('Update Successful');
     setSelectedAward(null);
   };
 
@@ -74,13 +77,14 @@ const AdminPageAwardSectionPannel = () => {
     try {
       const dataRef = ref(database, `AllAwardData/${selectedAward.id}`);
       await remove(dataRef);
+      toast.success('Delete Successful');
     } catch (error) {
       console.log(error);
     }
   };
   return (
     <div className="my-4">
-      <div className="flex ">
+      <div className="flex justify-center items-center">
         <div>
           <h2 className="text-xl text-center">Add Award</h2>
           {/* Adding Single Featured Data Form */}
@@ -109,7 +113,7 @@ const AdminPageAwardSectionPannel = () => {
               color="red"
               text="Delete Project"
               position="center"
-              onClick={handleDeleteAward}
+              handleClick={handleDeleteAward}
             />
           </div>
         )}

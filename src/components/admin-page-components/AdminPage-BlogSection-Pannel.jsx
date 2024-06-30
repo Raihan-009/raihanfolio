@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { push, ref, remove, set, update } from 'firebase/database';
-import { v4 as uuidv4 } from 'uuid';
+import { ref, remove, set, update } from 'firebase/database';
 import BlogCard from '../Cards/Blog-Card';
 import Form from '../Form';
 import { database } from '../../config/firebase';
 import { Button } from '../InputFields';
 import { useFirebase } from '../../contexts/FirebaseContext';
 import UpdateForm from '../UpdateForm';
+const generateRandomId = () => {
+  return Math.random().toString(36).substring(2, 9);
+};
 export const BlogList = ({ blogs, handleEditBlog }) => {
   return (
-    <div>
-      <h2>All Blogs</h2>
+    <div className="my-4">
+      <h2 className="text-xl text-center">All Blogs</h2>
       <div className="flex flex-col gap-1">
         {blogs?.map((blog, index) => (
           <div
@@ -20,7 +22,7 @@ export const BlogList = ({ blogs, handleEditBlog }) => {
           >
             <BlogCard blog={blog} />
             <Button
-              text="Edit Button"
+              text="Click To Open Edit Form"
               handleClick={() => handleEditBlog(blog)}
             />
           </div>
@@ -49,9 +51,9 @@ const AdminPageBlogSectionPannel = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const dataRef = ref(database, 'AllBlogData');
-      const newDataRef = push(dataRef);
-      await set(newDataRef, { ...addFormData, id: uuidv4() });
+      const randomId = generateRandomId();
+      const dataRef = ref(database, `AllBlogData/${randomId}`);
+      await set(dataRef, { ...addFormData, id: randomId });
       toast.success('Blog Data Added Successfully');
       setLoading(false);
     } catch (error) {
@@ -63,24 +65,27 @@ const AdminPageBlogSectionPannel = () => {
     setSelectedBlog(blog);
     setUpdateFormData(blog);
   };
-  const handleUpdateBlogData = () => {
+  const handleUpdateBlogData = async () => {
     const dataRef = ref(database, `AllBlogData/${selectedBlog.id}`);
-    update(dataRef, selectedBlog);
+    await update(dataRef, selectedBlog);
+    toast.success('Update Successful');
     setSelectedBlog(null);
   };
 
   //delete blog
   const handleDeleteBlog = async () => {
     try {
+      console.log('clicked');
       const dataRef = ref(database, `AllBlogData/${selectedBlog.id}`);
       await remove(dataRef);
+      toast.success('Delete Successful');
     } catch (error) {
       console.log(error);
     }
   };
   return (
     <div className="my-4">
-      <div className="flex ">
+      <div className="flex justify-center items-center">
         <div>
           <h2 className="text-xl text-center">Add Blog</h2>
           {/* Adding Single Featured Data Form */}
@@ -109,7 +114,7 @@ const AdminPageBlogSectionPannel = () => {
               color="red"
               text="Delete Project"
               position="center"
-              onClick={handleDeleteBlog}
+              handleClick={handleDeleteBlog}
             />
           </div>
         )}

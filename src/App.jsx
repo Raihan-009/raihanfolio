@@ -5,11 +5,11 @@ import AdminPage from './pages/AdminPage';
 import { Toaster } from 'react-hot-toast';
 import AdminPageEducationSectionPannel from './components/admin-page-components/AdminPage-EducationSection-Pannel';
 import AdminPageAllProjectsPannel from './components/admin-page-components/AdminPage-AllProjects-Pannel';
-import AdminPageFeaturedSectionPannel from './components/admin-page-components/Feature-Control-Section/AdminPage-Featured-Section-Pannel';
 import AdminPageBlogPannel from './components/admin-page-components/AdminPage-BlogSection-Pannel';
 import AdminPageAwardSectionPannel from './components/admin-page-components/AdminPage-AwardSection-Pannel';
 import AdminPageExperienceSectionPannel from './components/admin-page-components/AdminPage-ExperienceSection-Pannel';
 import Test from './pages/Test';
+import AdminPageFeaturedSectionPannel from './components/admin-page-components/AdminPage-Featured-Section-Pannel';
 
 function App() {
   return (

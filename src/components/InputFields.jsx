@@ -62,6 +62,7 @@ export const TextAreaField = ({
 };
 export const FileInputField = ({
   document,
+  requirement,
   setDocument,
   setPerc,
   setFormdata,
@@ -74,11 +75,11 @@ export const FileInputField = ({
       const storageFolderName = imageOption
         ? imageOption.folderName
         : 'other-photos';
-      const featuredPhotoFolderRef = ref(
+      const photoFolderRef = ref(
         storage,
         `${storageFolderName}/${uploadedImageName}`
       );
-      const uploadTask = uploadBytesResumable(featuredPhotoFolderRef, document);
+      const uploadTask = uploadBytesResumable(photoFolderRef, document);
 
       uploadTask.on(
         'state_changed',
@@ -123,11 +124,12 @@ export const FileInputField = ({
         console.log('error', error);
       }
     };
+
     document ? uploadFile() : null;
   }, [setFormdata, setPerc, imageOption, document]);
 
   const handleChange = (e) => {
-    setDocument(e.target.files[0]);
+    setDocument ? setDocument(e.target.files[0]) : null;
   };
   return (
     <div className="rounded-md border border-indigo-500 bg-gray-50 p-4 shadow-md w-36">
@@ -151,7 +153,7 @@ export const FileInputField = ({
         <span className="text-gray-600 font-medium">Upload file</span>
       </label>
       <input
-        required
+        required={requirement ? true : false}
         id="upload"
         type="file"
         className="hidden"

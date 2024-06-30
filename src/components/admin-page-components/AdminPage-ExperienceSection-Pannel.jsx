@@ -1,36 +1,44 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { push, ref, remove, set, update } from 'firebase/database';
-import { v4 as uuidv4 } from 'uuid';
+import { ref, remove, set, update } from 'firebase/database';
 import Form from '../Form';
 import { database } from '../../config/firebase';
 import { Button } from '../InputFields';
 import { useFirebase } from '../../contexts/FirebaseContext';
 import { Timeline } from 'keep-react';
 import UpdateForm from '../UpdateForm';
+const generateRandomId = () => {
+  return Math.random().toString(36).substring(2, 9);
+};
 export const ExperienceList = ({ experiences, handleEditExperience }) => {
   return (
-    <div className="flex">
-      {experiences?.map((experience, index) => (
-        <Timeline.Item key={index} className="pl-5">
-          <Timeline.Content className="flex flex-col gap-1">
-            <img
-              src={experience?.image}
-              alt=""
-              className="aspect-auto object-cover"
+    <div className="my-4">
+      <h2 className="text-xl text-center">All Experiences</h2>
+      <div className="flex justify-center items-center gap-2 p-4">
+        {experiences?.map((experience, index) => (
+          <div
+            key={index}
+            className="flex flex-col justify-center items-center"
+          >
+            <Button
+              text="Click To Open Edit Form"
+              handleClick={() => handleEditExperience(experience)}
             />
-            <p className="text-sm ">{experience?.date}</p>
-            <p className="text-sm ">{experience?.location}</p>
-            <p className="text-lg font-bold ">{experience?.role}</p>
-            <h6 className="text-2xl font-bold ">{experience?.title}</h6>
-            <p className=" ">{experience?.description}</p>
-          </Timeline.Content>
-          <Button
-            text="Edit Button"
-            handleClick={() => handleEditExperience(experience)}
-          />
-        </Timeline.Item>
-      ))}
+            <Timeline.Content className="flex flex-col gap-1">
+              <img
+                src={experience?.image}
+                alt=""
+                className="aspect-auto object-cover"
+              />
+              <p className="text-sm ">{experience?.date}</p>
+              <p className="text-sm ">{experience?.location}</p>
+              <p className="text-lg font-bold ">{experience?.role}</p>
+              <h6 className="text-2xl font-bold ">{experience?.title}</h6>
+              <p className=" ">{experience?.description}</p>
+            </Timeline.Content>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
@@ -54,9 +62,9 @@ const AdminPageExperienceSectionPannel = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const dataRef = ref(database, 'AllExpeienceData');
-      const newDataRef = push(dataRef);
-      await set(newDataRef, { ...addFormData, id: uuidv4() });
+      const randomId = generateRandomId();
+      const dataRef = ref(database, `AllExperienceData/${randomId}`);
+      await set(dataRef, { ...addFormData, id: randomId });
       toast.success('Experience Data Added Successfully');
       setLoading(false);
     } catch (error) {
@@ -68,9 +76,10 @@ const AdminPageExperienceSectionPannel = () => {
     setSelectedExperience(experience);
     setUpdateFormData(experience);
   };
-  const handleUpdateExperienceData = () => {
+  const handleUpdateExperienceData = async () => {
     const dataRef = ref(database, `AllExpeienceData/${selectedExperience.id}`);
-    update(dataRef, selectedExperience);
+    await update(dataRef, selectedExperience);
+    toast.success('Update Successful');
     setSelectedExperience(null);
   };
 
@@ -82,13 +91,14 @@ const AdminPageExperienceSectionPannel = () => {
         `AllExpeienceData/${selectedExperience.id}`
       );
       await remove(dataRef);
+      toast.success('Delete Successful');
     } catch (error) {
       console.log(error);
     }
   };
   return (
     <div className="my-4">
-      <div className="flex ">
+      <div className="flex justify-center items-center">
         <div>
           <h2 className="text-xl text-center">Add Experience</h2>
           {/* Adding Single Featured Data Form */}
@@ -121,7 +131,7 @@ const AdminPageExperienceSectionPannel = () => {
               color="red"
               text="Delete Project"
               position="center"
-              onClick={handleDeleteExperience}
+              handleClick={handleDeleteExperience}
             />
           </div>
         )}

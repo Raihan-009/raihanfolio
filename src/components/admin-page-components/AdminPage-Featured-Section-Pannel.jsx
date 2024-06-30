@@ -1,29 +1,30 @@
-import Form from '../../Form';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { database } from '../../../config/firebase';
-import { push, ref, remove, set, update } from 'firebase/database';
-import { v4 as uuidv4 } from 'uuid';
-import { Button } from '../../InputFields';
-import { useFirebase } from '../../../contexts/FirebaseContext';
-import FeatureCard from '../../Cards/Feature-Card';
-import UpdateForm from '../../UpdateForm';
-
+import { ref, remove, set, update } from 'firebase/database';
+import FeatureCard from '../Cards/Feature-Card';
+import { Button } from '../InputFields';
+import { database } from '../../config/firebase';
+import Form from '../Form';
+import UpdateForm from '../UpdateForm';
+import { useFirebase } from '../../contexts/FirebaseContext';
+const generateRandomId = () => {
+  return Math.random().toString(36).substring(2, 9);
+};
 export const FeatureList = ({ features, handleEditFeature }) => {
   return (
-    <div>
-      <h2>All Features</h2>
+    <div className="my-4">
+      <h2 className="text-xl text-center">All Features</h2>
       <div className="flex">
         {features?.map((feature, index) => (
           <div
             key={index}
             className="flex flex-col justify-center items-center"
           >
-            <FeatureCard feature={feature} />
             <Button
-              text="Edit Button"
+              text="Click To Open Edit Form"
               handleClick={() => handleEditFeature(feature)}
             />
+            <FeatureCard feature={feature} />
           </div>
         ))}
       </div>
@@ -49,9 +50,9 @@ const AdminPageFeaturedSectionPannel = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const dataRef = ref(database, 'AllFeatureData');
-      const newDataRef = push(dataRef);
-      await set(newDataRef, { ...addFormData, id: uuidv4() });
+      const randomId = generateRandomId();
+      const dataRef = ref(database, `AllFeatureData/${randomId}`);
+      await set(dataRef, { ...addFormData, id: randomId });
       toast.success('Feature Data Added Successfully');
       setLoading(false);
     } catch (error) {
@@ -63,9 +64,11 @@ const AdminPageFeaturedSectionPannel = () => {
     setSelectedFeature(feature);
     setUpdateFormData(feature);
   };
-  const handleUpdateFeatureData = () => {
+  const handleUpdateFeatureData = async (e) => {
+    e.preventDefault();
     const featureRef = ref(database, `AllFeatureData/${selectedFeature.id}`);
-    update(featureRef, selectedFeature);
+    await update(featureRef, updateFormData);
+    toast.success('Update Successful');
     setSelectedFeature(null);
   };
 
@@ -74,13 +77,14 @@ const AdminPageFeaturedSectionPannel = () => {
     try {
       const featureRef = ref(database, `AllFeatureData/${selectedFeature.id}`);
       await remove(featureRef);
+      toast.success('Delete Successful');
     } catch (error) {
       console.log(error);
     }
   };
   return (
     <div className="my-4">
-      <div className="flex ">
+      <div className="flex justify-center items-center">
         <div>
           <h2 className="text-xl text-center">Add Feature</h2>
           {/* Adding Single Featured Data Form */}
@@ -113,7 +117,7 @@ const AdminPageFeaturedSectionPannel = () => {
               color="red"
               text="Delete Feature"
               position="center"
-              onClick={handleDeleteFeature}
+              handleClick={handleDeleteFeature}
             />
           </div>
         )}

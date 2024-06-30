@@ -1,10 +1,4 @@
-import { useState } from 'react';
-import {
-  Button,
-  FileInputField,
-  TextAreaField,
-  TextInputField,
-} from './InputFields';
+import { Button, TextAreaField, TextInputField } from './InputFields';
 
 import Loader from './Loader';
 
@@ -18,8 +12,6 @@ const UpdateForm = ({
   imageOption = false,
   imageUrl = 'https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg',
 }) => {
-  const [document, setDocument] = useState(null);
-  const [per, setPerc] = useState(null);
   console.log('fields', fields);
   console.log('updateFormData', updateFormData);
   return (
@@ -58,14 +50,6 @@ const UpdateForm = ({
             )}
             {imageOption && (
               <div className="flex justify-evenly items-center">
-                <FileInputField
-                  document={document}
-                  setDocument={setDocument}
-                  setPerc={setPerc}
-                  setFormdata={setUpdateFormdata}
-                  imageOption={imageOption}
-                  name={'image'}
-                />
                 <img
                   height={'200px'}
                   width={'200px'}
@@ -75,7 +59,6 @@ const UpdateForm = ({
               </div>
             )}
             <Button
-              per={per}
               type="submit"
               color="green"
               text="Update Feature"
