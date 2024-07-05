@@ -9,6 +9,9 @@ export default {
   presets: [keepPreset],
   theme: {
     extend: {
+      dropShadow: {
+        "3xl": "0 35px 35px rgba(1, 1, 1, 1)",
+      },
       fontFamily: {
         inter: ["Inter", "sans-serif"],
       },

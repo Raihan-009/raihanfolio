@@ -10,13 +10,13 @@ const Sidebar = () => {
   const features = [
     "About Me",
     "Featured",
-    "Experience",
-    "Education",
     "Projects",
     "Skills",
     "Award & Certification",
-    "Testimonial",
     "Blog",
+    "Experience",
+    "Education",
+    "Contact Me",
   ];
   return (
     <section className="w-fit min-w-60 bg-[#232323] ">
@@ -35,7 +35,7 @@ const Sidebar = () => {
               return (
                 <span
                   key={feature}
-                  className="font-bold leading-7 my-1 cursor-pointer hover:text-[#FFD700]"
+                  className="font-bold leading-7 my-1 cursor-pointer hover:text-[#31fff5] hover:drop-shadow-3xl"
                 >
                   {feature}
                 </span>
