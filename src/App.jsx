@@ -10,6 +10,7 @@ import AdminPageAwardSectionPannel from './components/admin-page-components/Admi
 import AdminPageExperienceSectionPannel from './components/admin-page-components/AdminPage-ExperienceSection-Pannel';
 import Test from './pages/Test';
 import AdminPageFeaturedSectionPannel from './components/admin-page-components/AdminPage-Featured-Section-Pannel';
+import SpecificProjectPage from './pages/Specific-Project-Page';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <Toaster />
       <Routes>
         <Route path="/" element={<LandingPageSection />} />
+        <Route path="/project/:title" element={<SpecificProjectPage/>} />
         <Route path="/test" element={<Test />} />
         <Route path="/admin" element={<AdminPage />}>
           <Route

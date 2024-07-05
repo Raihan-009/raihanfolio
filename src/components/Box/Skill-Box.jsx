@@ -7,7 +7,7 @@ const SkillBox = ({ title, skills }) => {
       {skills.map((skill, index) => (
         <span
           key={index}
-          className="text-nowrap px-6 py-3 bg-card rounded-md font-bold"
+          className="text-nowrap px-6 py-3 bg-card rounded-md font-bold hover:transform hover:scale-105 transition duration-300 ease-in-out"
         >
           {skill}
         </span>
