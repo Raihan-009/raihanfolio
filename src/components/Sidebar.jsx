@@ -35,7 +35,7 @@ const Sidebar = () => {
               return (
                 <span
                   key={feature}
-                  className="font-bold leading-7 my-1 cursor-pointer hover:text-[#31fff5] hover:drop-shadow-3xl"
+                  className="font-bold leading-7 my-1 cursor-pointer hover:text-[#31fff5]"
                 >
                   {feature}
                 </span>
