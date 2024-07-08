@@ -40,7 +40,7 @@ const SkillsSection = () => {
     ],
   };
   return (
-    <section className="normal-page flex flex-col gap-24">
+    <section className="normal-page flex flex-col justify-center gap-24">
       <h2 className="text-3xl font-bold uppercase">Skills</h2>
       <SkillBox
         title="Front-end"

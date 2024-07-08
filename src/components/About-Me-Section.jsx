@@ -1,7 +1,6 @@
 const AboutMeSection = () => {
   return (
-    <section className="normal-page flex flex-col gap-16">
-      
+    <div className="normal-page flex flex-col justify-center gap-16">
         <div className="text-white">
           <div className="flex items-end gap-2">
             <img
@@ -30,15 +29,15 @@ const AboutMeSection = () => {
           technology industry.
         </p>
         <div className="flex gap-8">
-          <button className="bg-button text-white font-bold px-14 py-3 rounded-lg">
+          <button className="bg-button/90 hover:bg-button duration-300 text-white font-bold px-14 py-3 rounded-lg">
             My latest Project
           </button>
-          <button className="px-14 py-3 font-bold text-[#3959c1] border-0.5 border-[#3959c1] rounded-lg">
+          <button className="px-14 py-3 font-bold text-[#3959c1] hover:text-white hover:bg-button border-0.5 border-[#3959c1] duration-300 rounded-lg">
             View My Resume
           </button>
         </div>
    
-    </section>
+    </div>
   );
 };
 

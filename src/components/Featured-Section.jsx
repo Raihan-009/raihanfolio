@@ -5,9 +5,9 @@ const FeaturedSection = () => {
   const data = useFirebase();
   const featuredData = data?.AllFeatureData;
   return (
-    <section className="normal-page flex flex-col gap-14">
+    <section className="normal-page flex flex-col justify-center gap-14">
       <h2 className="text-3xl font-bold uppercase">Featured</h2>
-      <div className="w-full flex gap-10">
+      <div className="w-full grid lg:grid-cols-3 gap-10">
         {featuredData?.map((data, index) => (
           <FeatureCard key={index} feature={data} />
         ))}
