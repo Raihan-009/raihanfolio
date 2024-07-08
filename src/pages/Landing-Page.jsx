@@ -18,9 +18,9 @@ const LandingPageSection = () => {
       <SkillsSection />
       <AwardSection />
       <BlogSection />
-      {/* <ExperienceSection /> */}
-      {/* <EducationSection /> */}
-      {/* <ContactMeSection /> */}
+      <ExperienceSection />
+      <EducationSection />
+      <ContactMeSection />
     </Layout>
   );
 };
