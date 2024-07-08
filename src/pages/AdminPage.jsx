@@ -1,12 +1,11 @@
 import Layout from '../components/Layout';
 import { Outlet } from 'react-router-dom';
-import { useFirebase } from '../contexts/FirebaseContext';
+import ResumeUpload from '../components/ResumeUpload';
 
 const AdminPage = () => {
-  const data = useFirebase();
-  console.log(data);
   return (
     <Layout admin={true}>
+      <ResumeUpload />
       <Outlet />
     </Layout>
   );

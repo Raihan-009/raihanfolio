@@ -1,22 +1,23 @@
+import { Link } from 'react-router-dom';
 import {
   GithubIcon,
   LinkedinIcon,
   RedirectIcon,
   TwitterIcon,
   WhatsappIcon,
-} from "../assets/SVG-Icons";
+} from '../assets/SVG-Icons';
 
 const Sidebar = () => {
   const features = [
-    "About Me",
-    "Featured",
-    "Experience",
-    "Education",
-    "Projects",
-    "Skills",
-    "Award & Certification",
-    "Testimonial",
-    "Blog",
+    'About Me',
+    'Featured',
+    'Experience',
+    'Education',
+    'Projects',
+    'Skills',
+    'Award & Certification',
+    'Testimonial',
+    'Blog',
   ];
   return (
     <section className="w-fit min-w-60 bg-[#232323] ">
@@ -37,7 +38,7 @@ const Sidebar = () => {
                   key={feature}
                   className="font-bold leading-7 my-1 cursor-pointer hover:text-[#FFD700]"
                 >
-                  {feature}
+                  <a href={`#${feature}`}>{feature}</a>
                 </span>
               );
             })}

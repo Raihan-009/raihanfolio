@@ -104,7 +104,6 @@ export const FileInputField = ({
         },
         () => {
           // After upload completes, wait then get the download URL
-          setPerc(99);
           getDownloadURLAfterUpload(uploadTask.snapshot.ref);
           setPerc(null);
         }
