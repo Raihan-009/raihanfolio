@@ -3,6 +3,7 @@ import FeatureCard from './Cards/Feature-Card';
 
 const FeaturedSection = () => {
   const data = useFirebase();
+ 
   const featuredData = data?.AllFeatureData;
   return (
     <section className="normal-page flex flex-col justify-center gap-14">
